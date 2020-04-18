@@ -24,16 +24,40 @@ def update_database(shop, id_, peoplechange):
     pass
 
 def register(signin_data):
-    pass
+    # check whether it is the correct format for signin_data
+    user = User(
+    name= signin_data["name"],
+    shopaddress= signin_data["shopaddress"],
+    login= signin_data["login"],
+    password= signin_data["password"]
+    )
+    db.session.add(user)
+    db.session.commit()
+    return True
 
 def login(username, password):
     return True
 
 def get_shops():
-    retu
+    shops = Shop.query.all()
+    return shops
 
 def get_shopinfo(shop, id_, time):
     return "xoxo"
 
 def add_shop(shop, shopinfo):
-    pass
+    lat = 
+    long = 
+    
+    newshop = Shop(
+    name=shopinfo["name"],
+    category=shopinfo["category"],
+    address=shopinfo["address"],
+    latitude=lat,
+    longitude=long,
+    storespace=shopinfo["storespace"],
+    maxcapacity=shopinfo["maxcapacity"]
+    )
+    db.session.add(newshop)
+    db.session.commit()
+    return True
