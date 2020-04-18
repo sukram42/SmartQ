@@ -5,12 +5,14 @@ from flask_jwt import JWT, jwt_required
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import safe_str_cmp
 from geopy.geocoders import Nominatim
+from flask_cors import CORS
 geolocator = Nominatim()
 
 project_dir = os.path.dirname(os.path.abspath(__file__))
 database_file = "sqlite:///{}".format(os.path.join(project_dir, "queuedatabase.db"))
 
 app = Flask(__name__)
+CORS(app)
 
 app.config['SECRET_KEY'] = 'super-secret'
 
