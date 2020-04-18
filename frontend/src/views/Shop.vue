@@ -23,12 +23,29 @@ export default {
     }
   },
   mounted () {
+    const user = window.localStorage.getItem('user')
     Axios
-      .get('http://localhost:5000/shops')
+      .get('http://localhost:5000/usershops?id=' + user)
       .then(
         response => {
           console.log(response.data)
-          this.shops = response.data
+          console.log(window.localStorage.getItem('user'))
+          const tmp = response.data
+          tmp.forEach(element => {
+            Axios
+              .get('http://localhost:5000/shopinfo?id=' + element.id)
+              .then(
+                response => {
+                  console.log(response.data[0])
+                  if (this.shops === null) {
+                    this.shops = [response.data[0]]
+                  } else {
+                    this.shops.push(response.data[0])
+                  }
+                }
+              )
+            console.log('asdasd' + element.id)
+          })
         }
       )
   }
