@@ -24,11 +24,14 @@
     <div class="chart">
       Trend:
       <trend
-        :data='[1, 2, 5, 9, 5, 10, 3, 40, 37, 33, 20, 8, 2, 9, 19]'
+        :data='[1, 2, 5, 9, 5, 10, 3, 40, 37, 33, 20, 8, 2, 9, 19, 33, 38, 42, 42, 49,77, 88, 100, 100, 100, 99, 70]'
         :gradient="['#b00000', '#ffd05c', '#00b000']"
         :max='shop.maxcapacity'
+        :min='shop.maxcapacity'
+        strokeWidth="20px"
         auto-draw
-        smooth>
+        smooth
+        >
       </trend>
     </div>
   </div>
