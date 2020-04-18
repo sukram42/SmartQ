@@ -13,7 +13,7 @@ const routes: Array<RouteConfig> = [
     component: Home
   },
   {
-    path: '/shopDetail/:id',
+    path: '/shopDetail/:shopID',
     name: 'ShopDetail',
     component: ShopDetailPage
   },
