@@ -1,13 +1,15 @@
 <template>
   <div class="infos">
-    <div class="image"> </div>
+    <div class="image">
+      <v-btn class="back-btn" color="#02FF04" v-on:click="()=>$router.go(-1)"> Go back</v-btn>
+    </div>
     <div class="store-info">
-      <div class="store">Supermarket</div>
-      <div class="name">1# Rewemarkt Obstenhofen</div>
+      <div class="store">{{shop.category}}</div>
+      <div class="name">{{ shop.name }}</div>
       <div class="address">
-        <div>Sulzbacherstraße 6</div>
+        <div>{{ shop.address.split(',')[0] }}</div>
         <div class="divider">|</div>
-        <div> 423648 Obstenhofen</div>
+        <div> {{ shop.address.split(',')[1] }}</div>
       </div>
     </div>
     <div class="shareinfos">
@@ -24,18 +26,41 @@
 </template>
 
 <script>
-import TrendChart from '../components/TrendChart'
+import axios from 'axios'
+import { config } from '../config/config.js'
+
 export default {
   name: 'ShopDetailPage',
+  data: () => ({
+    shop: {
+      id: 1,
+      name: 'Penny Schwabing',
+      category: 'groceries',
+      address: 'Musterweg 15, 80807 München',
+      latitude: 48.2,
+      longitude: 11.5,
+      storespace: 800,
+      maxcapacity: 50,
+      capacity: 92.5,
+      waitingtime: 5,
+      lastupdate: {},
+      website: 'www.google.de'
+    }
+  }),
   methods: {
     openInMaps: () => {
-      const { lat, lng } = { lat: 49.46800006494457, lng: 17.11514008755796 }
-      window.open(`http://www.google.com/maps/place/${lat},${lng}`)
+      window.open(`http://www.google.com/maps/place/${this.shop.lat},${this.shop.lng}`)
     },
     openWebsite: () => {
-      const website = 'http://www.google.de'
+      const website = this.shop.website
       window.open(`${website}`)
+    },
+    loadShopInfo: async function () {
+      return axios.get(`${config.baseApi}/shopInfo/${this.$route.params.shopID}`)
     }
+  },
+  async mounted () {
+    this.shop = await this.loadShopInfo()
   }
 }
 </script>
@@ -68,6 +93,8 @@ export default {
     background-image: url('../assets/hanson-lu-sq5P00L7lXc-unsplash.jpg');
     background-size: cover;
     background-position: center;
+    display: flex;
+    align-items: flex-end;
   }
   .store-info {
     grid-area: name;
@@ -79,6 +106,7 @@ export default {
   .store{
     font-size: 1.5em;
     font-weight: lighter;
+    text-transform: capitalize;
   }
 
   .name {

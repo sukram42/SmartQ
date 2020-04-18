@@ -2,30 +2,51 @@
   <div class="home">
     <div class="search_input_wrapper">
       <div class="search_input">
-        <v-text-field label="Search for Restaurant">
+        <v-text-field v-model="searchString" label="Search" clearable>
         </v-text-field>
+        <div v-if="searchString.length > 0" class="info-field"> we found {{ shownShops.length>0? shownShops.length: 'no'}} result{{ shownShops.length ===1 ?'':'s'}}</div>
+        <div v-if="searchString.length === 0" class="info-field"> there {{ shownShops.length > 1? 'are' : 'is'}} {{ shownShops.length>0? shownShops.length: 'no'}} store{{ shownShops.length ===1 ?'':'s'}} available</div>
       </div>
     </div>
     <div id="map" ref="map">
-      <maps-marker :lat="-25.344"
-                   :lng="131.036"
-                   :onClick="onMarkerClick"
-                   :shop="{name: 'Rewe', id: 'blabla'}"
+      <maps-marker
+        v-for="shop in shownShops"
+        :key="shop.id"
+        :lat="shop.lat"
+        :lng="shop.lat"
+        :onClick="onMarkerClick"
+        :shop="shop"
       />
     </div>
   </div>
 </template>
 <script>
 
-// @ is an alias to /src
 import MapsMarker from '../components/MapsMarker'
+import axios from 'axios'
+import { config } from '../config/config.js'
 
 export default {
   name: 'Home',
   components: { MapsMarker },
   data: () => ({
-    map: null
+    map: null,
+    searchString: '',
+    shops: [{
+      lat: 10,
+      lon: 10,
+      id: 'jfsdkfj',
+      name: 'Rewestore',
+      category: 'grocery'
+    }]
   }),
+  computed: {
+    shownShops: function () {
+      return this.shops.filter((shop) => this.searchString === '' ? true : (
+        shop.name.includes(this.searchString) ||
+        shop.category.includes(this.searchString)))
+    }
+  },
   methods: {
     onMarkerClick (shop) {
       this.$router.push({ path: `shopDetail/${shop.name}` })
@@ -42,17 +63,21 @@ export default {
         }
       }
       checkForMap()
+    },
+    loadShops: async () => {
+      return axios.get(`${config.baseApi}/shops`)
     }
-
   },
-  mounted () {
+  async mounted () {
     this.map = new window.google.maps.Map(this.$refs.map, {
-      center: { lat: -25.344, lng: 131.036 },
+      center: { lat: 10, lng: 10 },
       zoom: 8,
       streetViewControl: false,
       fullscreenControl: false,
       mapTypeControl: false
     })
+
+    this.shops = await this.loadShops()
   }
 }
 </script>
@@ -72,7 +97,10 @@ export default {
     padding: 1% 4% 0 4%;
 
   }
-
+  .info-field {
+    font-size: 0.8em;
+    padding: -3% 0;
+  }
   #map {
     height: calc(100vh - 50px);
     width: 100vw;

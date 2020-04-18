@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <header id="nav">
-      <div class="logo">Queueti</div>
+      <router-link to="/" class="logo">Queueti</router-link>
       <div class="links">
         <router-link to="/">Home</router-link>
         <router-link to="/shop">Shop</router-link>
@@ -27,20 +27,12 @@
     margin: 0;
     padding: 0;
   }
-
   #app {
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #2c3e50;
-  }
-
-  .logo {
-    color: white;
-    font-size: 2em;
-    font-family: fantasy;
-    margin: 0 1em;
   }
 
   .content {
@@ -72,5 +64,12 @@
       /*Style for active tab*/
       color: #42b983;
     }
+  }
+  .logo {
+    color: white !important;
+    text-decoration: none;
+    font-size: 2em;
+    font-family: fantasy;
+    margin: 0 1em;
   }
 </style>
