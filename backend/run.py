@@ -91,7 +91,14 @@ def login(username, password):
 
 def get_shops():
     shops = Shop.query.all()
-    return shops
+    shoplist = []
+    for shop in shops:
+        shoplist.append({
+            "id": shop.id,
+            "name": shop.name,
+            "category": shop.category,
+        })
+    return shoplist
 
 def get_shopinfo(shop, id_, time):
     return "xoxo"
@@ -109,7 +116,6 @@ def add_shop(shop, shopinfo):
     storespace=shopinfo["storespace"],
     maxcapacity=shopinfo["maxcapacity"]
     )
-    print(newshop)
     db.session.add(newshop)
     db.session.commit()
     
