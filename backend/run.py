@@ -134,7 +134,7 @@ def get_shops():
         })
     return shoplist
 
-def get_shopinfo(id_, time):
+def get_shopinfo(id_):
     #peop = People.query.filter(People.lastupdate<time).order_by(People.id.desc()).first()
     p = People.query.filter_by(shopid = id_).order_by(People.id.desc()).first()
     shopinf = Shop.query.filter_by(id = p.shopid).first()
@@ -211,8 +211,9 @@ def update():
 def shopinfo():
     
     if request.method == "GET":
-        id_, time = request.json["id"], request.json["time"]
-        shopinfo = get_shopinfo(id_, time)
+        id_ = request.args.get('id')
+#         id_, time = request.json["id"], request.json["time"]
+        shopinfo = get_shopinfo(id_)
         return app.response_class(response=json.dumps(shopinfo),status=200,mimetype='application/json')
     elif request.method == "POST":
         shopinfo = request.json
