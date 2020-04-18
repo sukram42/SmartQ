@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <header id="nav">
-      <router-link to="/" class="logo">Queueti</router-link>
+      <router-link to="/" class="logo">SmartQ</router-link>
       <div class="links">
         <router-link to="/">Home</router-link>
         <router-link to="/shop">Shop</router-link>

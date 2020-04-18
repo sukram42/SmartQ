@@ -2,8 +2,7 @@
   <div class="home">
     <div class="search_input_wrapper">
       <div class="search_input">
-        <v-text-field v-model="searchString" label="Search" clearable>
-        </v-text-field>
+        <v-text-field v-model="searchString" single-line label="Search"></v-text-field>
         <div v-if="searchString.length > 0" class="info-field"> we found {{ shownShops.length>0? shownShops.length: 'no'}} result{{ shownShops.length ===1 ?'':'s'}}</div>
         <div v-if="searchString.length === 0" class="info-field"> there {{ shownShops.length > 1? 'are' : 'is'}} {{ shownShops.length>0? shownShops.length: 'no'}} store{{ shownShops.length ===1 ?'':'s'}} available</div>
       </div>
@@ -12,8 +11,8 @@
       <maps-marker
         v-for="shop in shownShops"
         :key="shop.id"
-        :lat="shop.lat"
-        :lng="shop.lat"
+        :lat="shop.latitude"
+        :lng="shop.longitude"
         :onClick="onMarkerClick"
         :shop="shop"
       />
@@ -32,13 +31,7 @@ export default {
   data: () => ({
     map: null,
     searchString: '',
-    shops: [{
-      lat: 10,
-      lon: 10,
-      id: 'jfsdkfj',
-      name: 'Rewestore',
-      category: 'grocery'
-    }]
+    shops: []
   }),
   computed: {
     shownShops: function () {
@@ -49,7 +42,7 @@ export default {
   },
   methods: {
     onMarkerClick (shop) {
-      this.$router.push({ path: `shopDetail/${shop.name}` })
+      this.$router.push({ path: `shopDetail/${shop.id}` })
     },
     getMap (callback) {
       /* eslint-disable */
@@ -77,7 +70,7 @@ export default {
       mapTypeControl: false
     })
 
-    this.shops = await this.loadShops()
+    this.shops = (await this.loadShops()).data
   }
 }
 </script>
@@ -86,20 +79,17 @@ export default {
     position: absolute;
     width: 100vw;
     z-index: 100;
-    padding: 1em;
+    padding: 0.5em;
   }
 
   .search_input {
     border-radius: 5px;
     z-index: 1000;
     background-color: white;
-
-    padding: 1% 4% 0 4%;
-
+    padding:1em
   }
   .info-field {
     font-size: 0.8em;
-    padding: -3% 0;
   }
   #map {
     height: calc(100vh - 50px);
