@@ -2,11 +2,11 @@
     <div class='shoppanel'>
       <h2 class="headerStuff">__StoreOwnerX__ </h2>
         <div v-for="shop in shops" :key="shop.id">
-          <shopDetails v-bind:shop="shop" v-on:edit-shop="editmode"/>
+          <shopDetails v-bind:shop="shop"/>
         </div>
-      <v-btn class="addBtn" fab dark large color="cyan" @click="$emit('edit-shop',shop); edit(shop)">
-        <v-icon dark>mdi-plus</v-icon>
-      </v-btn>
+            <v-btn class="editButtons" fab dark large color="cyan" v-bind:to="'newShop/'">
+              <v-icon dark>mdi-plus</v-icon>
+            </v-btn>
     </div>
 </template>
 
@@ -16,11 +16,6 @@ export default {
   name: 'ShopManage',
   components: {
     shopDetails
-  },
-  methods: {
-    editmode (id) {
-      console.log('Open edit page') //  TODO
-    }
   },
   props: ['shops']
 }

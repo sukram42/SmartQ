@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="shopList">
-      <ShopManage v-bind:shops="shops"/>
+      <ShopManage v-bind:shops="shops" v-on:add-shop="addShop"/>
     </div>
   </div>
 </template>
@@ -42,6 +42,24 @@ export default {
           waitingtime: 14
         }
       ]
+    }
+  },
+  methods: {
+    addShop () {
+      console.log('add A Shop')
+      this.shops.push(
+        {
+          id: 0,
+          name: '',
+          category: '',
+          address: '',
+          latitude: '',
+          longitude: '',
+          storespace: 0,
+          maxcapacity: 0,
+          capacity: 0,
+          waitingtime: 0
+        })
     }
   }
 }

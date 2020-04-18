@@ -23,6 +23,9 @@
                 </tr>
             </table>
             </center>
+            <v-btn class="editButtons" fab dark large color="cyan" v-bind:to="'counter/' + shop.id">
+              <v-icon dark>mdi-counter</v-icon>
+            </v-btn>
             <v-btn class="editButtons" fab dark large color="cyan" @click="$emit('edit-shop',shop); edit(shop)">
                 <v-icon dark>{{editIcon}}</v-icon>
             </v-btn>
@@ -86,8 +89,9 @@ export default {
 
 .editButtons {
     margin: 10px;
-    margin-left: 30px;
-    margin-right: 30px;
+    margin-left: 20px;
+    margin-right: 20px;
+    color: teal;
 }
 
 .nonEditText{

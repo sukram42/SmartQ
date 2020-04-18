@@ -3,6 +3,7 @@ import VueRouter, { RouteConfig } from 'vue-router'
 import Home from '../views/Home.vue'
 import ShopDetailPage from '../views/ShopDetailPage.vue'
 import Counter from '../views/Counter.vue'
+import newShop from '../views/newShop.vue'
 
 Vue.use(VueRouter)
 
@@ -21,6 +22,11 @@ const routes: Array<RouteConfig> = [
     path: '/counter/:id',
     name: 'Counter',
     component: Counter
+  },
+  {
+    path: '/newShop',
+    name: 'newShop',
+    component: newShop
   },
   {
     path: '/shop',
