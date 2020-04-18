@@ -18,7 +18,6 @@
   $header_size: 50px;
   $header_color: #000;
   $header_text_color: #FFF;
-
   html, body {
     width: 100vw;
     height: 100%;
@@ -26,7 +25,6 @@
     min-height: 100%;
     margin: 0;
   }
-
   #app {
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -34,18 +32,15 @@
     text-align: center;
     color: #2c3e50;
   }
-
   .logo {
     color: white;
     font-size: 2em;
     font-family: fantasy;
     margin: 0 1em;
   }
-
   .content {
     padding-top: $header_size;
   }
-
   #nav {
     /*padding: 0 4%;*/
     display: inline-flex;
@@ -59,7 +54,6 @@
     align-items: center;
     justify-content: space-between;
   }
-
   .links > * {
     margin: 0 1em;
     color: $header_text_color;

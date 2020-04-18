@@ -5,26 +5,30 @@
             <center>
             <table class="editList">
                 <tr>
-                    <th>Category</th><th><input type="text" v-model="shop.category" readonly="true"/> </th>
+                    <th>Category</th><th><v-text-field :class="{'nonEditText':!editing, 'editText':editing}" v-model="shop.category" :disabled='!editing'/> </th>
                 </tr><tr>
-                   <th>Address</th><th><input type="text" v-model="shop.address" readonly="true"/> </th>
+                   <th>Address</th><th><v-text-field :class="{'nonEditText':!editing, 'editText':editing}" v-model="shop.address" :disabled='!editing'/> </th>
                 </tr><tr>
-                  <th>Latitude</th><th><input type="text" v-model="shop.latitude" readonly="true"/> </th>
+                  <th>Latitude</th><th><v-text-field :class="{'nonEditText':!editing, 'editText':editing}" v-model="shop.latitude" :disabled='!editing'/> </th>
                 </tr><tr>
-                  <th>Longditude</th><th><input type="text" v-model="shop.longitude" readonly="true"/> </th>
+                  <th>Longditude</th><th><v-text-field :class="{'nonEditText':!editing, 'editText':editing}" v-model="shop.longitude" :disabled='!editing'/> </th>
                 </tr><tr>
-                  <th>Storespace</th><th><input type="text" v-model="shop.storespace" readonly="true"/> </th>
+                  <th>Storespace</th><th><v-text-field :class="{'nonEditText':!editing, 'editText':editing}" v-model="shop.storespace" :disabled='!editing'/> </th>
                 </tr><tr>
-                  <th>MaxCapacity</th><th><input type="text" v-model="shop.maxcapacity" readonly="true"/> </th>
+                  <th>MaxCapacity</th><th><v-text-field :class="{'nonEditText':!editing, 'editText':editing}" v-model="shop.maxcapacity" :disabled='!editing'/> </th>
                 </tr><tr>
-                  <th>CurrentCapacity</th><th><input type="text" v-model="shop.capacity" readonly="true"/> </th>
+                  <th>CurrentCapacity</th><th><v-text-field class='nonEditText' v-model="shop.capacity" disabled/> </th>
                 </tr><tr>
-                  <th>Waitingtime</th><th><input type="text" v-model="shop.waitingtime" readonly="true"/> </th>
+                  <th>Waitingtime</th><th><v-text-field class='nonEditText' v-model="shop.waitingtime" disabled/> </th>
                 </tr>
             </table>
             </center>
-        <button @click="$emit('edit-shop', shop, this)">Edit</button>
-        <button @click="$emit('remove-shop',shop.id)">Remove</button>
+            <v-btn class="editButtons" fab dark large color="cyan" @click="$emit('edit-shop',shop); edit(shop)">
+                <v-icon dark>{{editIcon}}</v-icon>
+            </v-btn>
+            <v-btn class="editButtons" fab dark large color="cyan" @click="$emit('remove-shop',shop)">
+                <v-icon dark>mdi-close-outline</v-icon>
+            </v-btn>
         </div>
     </div>
 </template>
@@ -32,30 +36,72 @@
 <script>
 export default {
   name: 'ShopDetails',
-  props: ['shop']
+  props: ['shop'],
+  data: function () {
+    return {
+      editing: false,
+      editIcon: 'mdi-pencil'
+    }
+  },
+  computed: {
+  },
+  methods: {
+    edit (shop) {
+      if (this.editing) { // save changes
+        this.editIcon = 'mdi-pencil'
+        this.editing = false
+        // TODO send update to backend
+      } else { // go to edit mode
+        this.editIcon = 'mdi-content-save'
+        this.editing = true
+      }
+    }
+  }
 }
 </script>
 
 <style scoped>
 .shopHeader{
-    background: orangered;
+    background: #42b983;
     padding: 10px;
     margin-top: 10px;
     margin-left: 2%;
     margin-right: 2%;
+    border-radius: 30px;
 
 }
 
 .shopDetails{
-    background: orange;
+    background: #42b983;
     padding: 10px;
+    border-radius: 30px;
 }
 
-.editList, th , td {
-    border: 1px solid black;
+.editList{
     border-collapse: collapse;
-    margin: 5px;
-    padding: 5px;
+    min-width: 300px;
+    max-width: 80%;
+    width: 70%;
+}
+
+.editButtons {
+    margin: 10px;
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+.nonEditText{
+  background: #6CA39E;
+  border-radius: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.editText{
+  background: #A4C1BA;
+  border-radius: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 </style>
