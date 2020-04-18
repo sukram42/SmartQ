@@ -26,11 +26,11 @@
             <v-btn class="editButtons" fab dark large color="#2c3e50" v-bind:to="'counter/' + shop.id">
               <v-icon dark>mdi-counter</v-icon>
             </v-btn>
+            <v-btn class="editButtons" fab dark large color="#2c3e50" v-bind:to="'shopdetail/' + shop.id">
+                <v-icon dark>mdi-launch</v-icon>
+            </v-btn>
             <v-btn class="editButtons" fab dark large color="#2c3e50" @click="$emit('edit-shop',shop); edit(shop)">
                 <v-icon dark>{{editIcon}}</v-icon>
-            </v-btn>
-            <v-btn class="editButtons" fab dark large color="#2c3e50" @click="$emit('remove-shop',shop)">
-                <v-icon dark>mdi-close-outline</v-icon>
             </v-btn>
         </div>
     </div>
@@ -75,7 +75,7 @@ export default {
 
 .shopHeader{
     background: #6ca39e;
-    min-width: 400px;
+    min-width: 355px;
     padding: 10px;
     margin-top: 10px;
     margin-left: 2%;
