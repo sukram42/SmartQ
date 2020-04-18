@@ -3,6 +3,8 @@ from flask import Flask, json, request
 from flask_jwt import JWT, jwt_required
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import safe_str_cmp
+from geopy.geocoders import Nominatim
+geolocator = Nominatim()
 
 project_dir = os.path.dirname(os.path.abspath(__file__))
 database_file = "sqlite:///{}".format(os.path.join(project_dir, "queuedatabase.db"))
@@ -95,8 +97,8 @@ def get_shopinfo(shop, id_, time):
     return "xoxo"
 
 def add_shop(shop, shopinfo):
-    lat = 10
-    long = 10
+    location = geolocator.geocode(shopinfo["address"])
+    lat, long = location.latitude, location.longitude
     
     newshop = Shop(
     name=shopinfo["name"],
