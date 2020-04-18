@@ -4,7 +4,7 @@ from backend import *
 
 
 app = Flask(__name__)
-app.debug = True
+
 app.config['SECRET_KEY'] = 'super-secret'
 
 # jwt = JWT(app, authenticate, identity)
