@@ -9,6 +9,8 @@
 
 <script>
 import ShopManage from './ShopManage.vue'
+import { config } from '../config/config.js'
+
 import Axios from 'axios'
 
 export default {
@@ -25,18 +27,15 @@ export default {
   mounted () {
     const user = window.localStorage.getItem('user')
     Axios
-      .get('http://localhost:5000/usershops?id=' + user)
+      .get(`${config.baseApi}/usershops?id=` + user)
       .then(
         response => {
-          console.log(response.data)
-          console.log(window.localStorage.getItem('user'))
           const tmp = response.data
           tmp.forEach(element => {
             Axios
-              .get('http://localhost:5000/shopinfo?id=' + element.id)
+              .get(`${config.baseApi}/shopinfo?id=` + element.id)
               .then(
                 response => {
-                  console.log(response.data[0])
                   if (this.shops === null) {
                     this.shops = [response.data[0]]
                   } else {
@@ -44,7 +43,6 @@ export default {
                   }
                 }
               )
-            console.log('asdasd' + element.id)
           })
         }
       )

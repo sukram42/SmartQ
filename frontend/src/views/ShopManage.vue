@@ -17,6 +17,7 @@
 
 <script>
 import shopDetails from './ShopManageDetail'
+
 export default {
   name: 'ShopManage',
   components: {
