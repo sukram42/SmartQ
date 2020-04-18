@@ -71,5 +71,6 @@
     font-size: 2em;
     font-family: fantasy;
     margin: 0 1em;
+
   }
 </style>
