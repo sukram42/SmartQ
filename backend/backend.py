@@ -30,7 +30,7 @@ def login(username, password):
     return True
 
 def get_shops():
-    return []
+    retu
 
 def get_shopinfo(shop, id_, time):
     return "xoxo"
