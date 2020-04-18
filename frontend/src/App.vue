@@ -5,6 +5,7 @@
       <div class="links">
         <router-link to="/">Home</router-link>
         <router-link to="/shop">Shop</router-link>
+        <router-link to="/counter/sdjflk">Counter</router-link>
       </div>
     </header>
     <div class="content">
@@ -20,11 +21,11 @@
   $header_text_color: #FFF;
 
   html, body {
-    width: 100vw;
+    width: 100%;
     height: 100%;
-    max-height: 100%;
-    min-height: 100%;
+    max-width: 100%;
     margin: 0;
+    padding: 0;
   }
 
   #app {
@@ -47,13 +48,13 @@
   }
 
   #nav {
-    /*padding: 0 4%;*/
     display: inline-flex;
     position: absolute;
     left: 0;
     top: 0;
     width: 100%;
     min-width: 100%;
+    max-width: 100%;
     height: $header_size;
     background-color: $header_color;
     align-items: center;
