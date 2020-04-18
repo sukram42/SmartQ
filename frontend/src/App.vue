@@ -4,9 +4,10 @@
       <router-link to="/" class="logo">SmartQ</router-link>
       <div class="links">
         <router-link to="/">Home</router-link>
-        <router-link to="/shop">Shop</router-link>
+        <router-link v-if="isLoggedIn" to="/shop">Shop</router-link>
 <!--        <router-link to="/counter/sdjflk">Counter</router-link>-->
-        <router-link to="/login">Login</router-link>
+        <router-link  v-if="!isLoggedIn" to="/login">Login</router-link>
+        <v-btn v-if="isLoggedIn" @click="logout()">  Logout </v-btn>
       </div>
     </header>
     <div class="content">
@@ -15,7 +16,22 @@
 
   </div>
 </template>
-
+<script>
+export default {
+  name: 'App',
+  computed: {
+    isLoggedIn: function () {
+      return window.localStorage.getItem('user')
+    }
+  },
+  methods: {
+    logout: function () {
+      window.localStorage.removeItem('user')
+      this.$router.push('/login')
+    }
+  }
+}
+</script>
 <style lang="scss">
   $header_size: 50px;
   $header_color: #000;

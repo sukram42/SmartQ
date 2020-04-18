@@ -5,7 +5,7 @@
     <p>
       You have a little store and want to be a part of <b>SmartQ</b>? <a @click="isLogging=!isLogging">Register here!</a>
     </p>
-    <v-text-field label="name" v-model="name"></v-text-field>
+    <v-text-field label="email" v-model="email"></v-text-field>
     <v-text-field
       :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
       :type="show1 ? 'text' : 'password'"
@@ -15,7 +15,7 @@
       name="input-10-1"
       v-model="password"
     ></v-text-field>
-    <v-btn :disabled="isBtnDisabled" class="submit-button">Go!</v-btn>
+    <v-btn :disabled="isBtnDisabled" class="submit-button" @click="login()">Go!</v-btn>
   </div>
   <div class="register-fields" v-if="!isLogging">
     <h1>Register</h1>
@@ -25,6 +25,7 @@
     </p>
 
     <v-text-field label="name" v-model="name"></v-text-field>
+    <v-text-field label="email" v-model="email"></v-text-field>
     <v-text-field
       :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
       :type="show1 ? 'text' : 'password'"
@@ -43,15 +44,19 @@
       name="input-10-1"
       v-model="password2"
     ></v-text-field>
-    <v-btn :disabled="isBtnDisabled" class="submit-button">Go!</v-btn>
+    <v-btn :disabled="isBtnDisabled" class="submit-button" @click="()=>register()">Go!</v-btn>
   </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
+import { config } from '../config/config.js'
+
 export default {
   name: 'Login',
   data: () => ({
+    email: '',
     isLogging: true,
     availableBtn: false,
     password: '',
@@ -66,7 +71,30 @@ export default {
   }),
   computed: {
     isBtnDisabled: function () {
-      return !(this.password.length > 0 && (this.isLogging || this.password === this.password2) && this.name.length > 0)
+      return !(this.password.length > 0 && (this.isLogging || this.password === this.password2) && this.email.length > 0)
+    }
+  },
+  methods: {
+    register: async function () {
+      const answer = await axios.post(`${config.baseApi}/register`, {
+        name: this.name,
+        login: this.email,
+        password: this.password
+      })
+      if (answer) {
+        this.isLogging = true
+      }
+    },
+    login: function () {
+      return axios.post(`${config.baseApi}/signin`, {
+        login: this.email,
+        password: this.password
+      }).then((id) => {
+        if (id.data) {
+          window.localStorage.setItem('user', id.data)
+          this.$router.push('/shop')
+        }
+      })
     }
   }
 }
