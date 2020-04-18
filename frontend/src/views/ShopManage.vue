@@ -31,11 +31,11 @@ export default {
     margin: 0%;
     padding: 30px;
     padding-bottom: 50px;
-    background: #2c3e50;
+    background: #EEE;
 }
 
 .headerStuff {
-  background: #42b983;
+  background: #DDD;
   border-radius: 20px;
   margin: 2%;
   padding: 10px;

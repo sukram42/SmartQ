@@ -22,6 +22,14 @@
       </div>
     </div>
     <div class="chart">
+      Trend:
+      <trend
+        :data='[1, 2, 5, 9, 5, 10, 3, 40, 37, 33, 20, 8, 2, 9, 19]'
+        :gradient="['#b00000', '#ffd05c', '#00b000']"
+        :max='shop.maxcapacity'
+        auto-draw
+        smooth>
+      </trend>
     </div>
   </div>
 </template>
@@ -29,6 +37,7 @@
 <script>
 import axios from 'axios'
 import { config } from '../config/config.js'
+import trend from 'vuetrend'
 
 export default {
   name: 'ShopDetailPage',
@@ -62,6 +71,15 @@ export default {
 </script>
 
 <style scoped>
+  svg{
+    margin: 0px !important;
+    padding: 0px;
+    width: 100%;
+    height: 100%;
+    background: #F5F5F5;
+    border-radius: 20px;
+  }
+
   img{
     height: 3em;
   }
@@ -81,7 +99,7 @@ export default {
       "img img img img"
       ". name name ."
       ". wait info . "
-      /*". graph graph ."*/
+      ". graph graph ."
   }
   .image {
     grid-area: img;
