@@ -5,7 +5,7 @@
             <center>
             <table class="editList">
                 <tr>
-                    <th>Category</th><th><v-text-field :class="{'nonEditText':!editing, 'editText':editing}" v-model="shop.category" :disabled='!editing'/> </th>
+                    <th>Category</th><th><v-select :class="{'nonEditText':!editing, 'editText':editing}" v-model="shop.category" :items="categoryItems" :disabled='!editing'/> </th>
                 </tr><tr>
                    <th>Address</th><th><v-text-field :class="{'nonEditText':!editing, 'editText':editing}" v-model="shop.address" :disabled='!editing'/> </th>
                 </tr><tr>
@@ -43,6 +43,7 @@ export default {
   data: function () {
     return {
       editing: false,
+      categoryItems: ['food', 'groceries', 'restaurant'],
       editIcon: 'mdi-pencil'
     }
   },
@@ -63,15 +64,23 @@ export default {
 }
 </script>
 
+<style>
+.v-app{
+  min-height: 0px !important;
+}
+</style>
+
 <style scoped>
+
 .shopHeader{
     background: #42b983;
+    min-width: 400px;
     padding: 10px;
     margin-top: 10px;
     margin-left: 2%;
     margin-right: 2%;
     border-radius: 30px;
-
+    margin-bottom: 0px;
 }
 
 .shopDetails{

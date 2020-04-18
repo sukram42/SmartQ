@@ -9,7 +9,7 @@ export default {
   mounted () {
     this.$parent.getMap(map => {
       this.marker = new window.google.maps.Marker({
-        position: { lat: this.lat, lng: this.lng },
+        position: { lat: parseFloat(this.lat), lng: parseFloat(this.lng) },
         map: map
       })
 
