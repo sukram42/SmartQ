@@ -3,7 +3,7 @@
   <div class="login-fields" v-if="isLogging">
     <h1>Login</h1><br />
     <p>
-      You have a little store and want to be a part of <b>Queueti</b>? <a @click="isLogging=!isLogging">Register here!</a>
+      You have a little store and want to be a part of <b>SmartQ</b>? <a @click="isLogging=!isLogging">Register here!</a>
     </p>
     <v-text-field label="name" v-model="name"></v-text-field>
     <v-text-field
@@ -21,8 +21,9 @@
     <h1>Register</h1>
     <br>
     <p>
-      Already have an account.<br> <a @click="isLogging=!isLogging">Log in right here.</a>
+      Already have an <b>SmartQ</b> account.<br> <a @click="isLogging=!isLogging">Log in right here.</a><br>
     </p>
+
     <v-text-field label="name" v-model="name"></v-text-field>
     <v-text-field
       :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
@@ -38,7 +39,7 @@
       :type="show1 ? 'text' : 'password'"
       @click:append="show1 = !show1"
       counter
-      label="Password"
+      label="Repeat Password"
       name="input-10-1"
       v-model="password2"
     ></v-text-field>
@@ -74,6 +75,9 @@ export default {
 <style scoped>
   a {
     color: #00D;
+  }
+  p{
+    padding-bottom: 1em;
   }
   .login{
     display: grid;
