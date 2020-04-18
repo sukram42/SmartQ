@@ -8,11 +8,12 @@ project_dir = os.path.dirname(os.path.abspath(__file__))
 database_file = "sqlite:///{}".format(os.path.join(project_dir, "queuedatabase.db"))
 
 app = Flask(__name__)
-app.debug = True
+
 app.config['SECRET_KEY'] = 'super-secret'
 
 #setting up the database
 app.config["SQLALCHEMY_DATABASE_URI"] = database_file
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 class shop(db.Model):
@@ -50,8 +51,6 @@ class user(db.Model):
         return "<ID: {}>".format(self.id)
     
 # jwt = JWT(app, authenticate, identity)
-
-success = True
 
 @app.route('/register', methods=['GET', 'POST'])
 # @jwt_required()
