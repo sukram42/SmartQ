@@ -11,17 +11,13 @@
                 </tr><tr>
                    <th>Address</th><th><v-text-field class="editText" v-model="address" /> </th>
                 </tr><tr>
-                  <th>Latitude</th><th><v-text-field class="editText" v-model="latitude" /> </th>
-                </tr><tr>
-                  <th>Longditude</th><th><v-text-field class="editText" v-model="longitude" /> </th>
-                </tr><tr>
                   <th>Storespace</th><th><v-text-field class="editText" v-model="storespace" /> </th>
                 </tr><tr>
                   <th>MaxCapacity</th><th><v-text-field class="editText" v-model="maxcapacity" /> </th>
                 </tr>
             </table>
             </center>
-            <v-btn class="editButtons" fab dark large color="cyan" v-bind:to="'/shop'">
+            <v-btn class="editButtons" fab dark large color="cyan" @click="uploadShop">
               <v-icon dark>mdi-content-save</v-icon>
             </v-btn>
         </div>
@@ -30,6 +26,8 @@
 </template>
 
 <script>
+import Axios from 'axios'
+import { config } from '../config/config.js'
 export default {
   data: function () {
     return {
@@ -37,10 +35,25 @@ export default {
       name: '',
       category: '',
       address: '',
-      latitude: '',
-      longitude: '',
       storespace: 0,
       maxcapacity: 0
+    }
+  },
+  methods: {
+    uploadShop () {
+      Axios
+        .post(`${config.baseApi}/shopinfo`, {
+          name: this.name,
+          category: this.category,
+          address: this.address,
+          storespace: this.storespace,
+          maxcapacity: this.maxcapacity,
+          userid: window.localStorage.getItem('user')
+        }
+        )
+        .then(result => {
+          console.log(result)
+        })
     }
   }
 }
