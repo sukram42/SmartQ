@@ -1,9 +1,10 @@
 import os
 from flask import Flask, json, request
 from flask_jwt import JWT, jwt_required
-from backend import *
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import safe_str_cmp
+from geopy.geocoders import Nominatim
+geolocator = Nominatim()
 
 project_dir = os.path.dirname(os.path.abspath(__file__))
 database_file = "sqlite:///{}".format(os.path.join(project_dir, "queuedatabase.db"))
@@ -39,7 +40,7 @@ class People(db.Model):
     lastupdate=db.Column(db.DateTime, nullable=False)
     
     def __repr__(self):
-        return "<ID: {}>".format(self.id)
+        return "<ID: {}>".format(id)
     
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -50,6 +51,69 @@ class User(db.Model):
     
     def __repr__(self):
         return "<ID: {}>".format(self.id)
+    
+    
+def get_all_users():
+    users = [12] #load all users
+    username_table = {u.username: u for u in users}
+    userid_table = {u.id: u for u in users}
+    return username_table, userid_table
+
+def authenticate(username, password):
+    username_table, _ = get_all_users()
+    user = username_table.get(username, None)
+    if user and safe_str_cmp(user.password.encode('utf-8'), password.encode('utf-8')):
+        return user
+
+def identity(payload):
+    _, userid_table = get_all_users()
+    user_id = payload['identity']
+    return userid_table.get(user_id, None)
+
+
+
+def update_database(shop, id_, peoplechange):
+    pass
+
+def register(signin_data):
+    # check whether it is the correct format for signin_data
+    user = User(
+    name= signin_data["name"],
+    shopaddress= signin_data["shopaddress"],
+    login= signin_data["login"],
+    password= signin_data["password"]
+    )
+    db.session.add(user)
+    db.session.commit()
+    
+def login(username, password):
+    return True
+
+def get_shops():
+    shops = Shop.query.all()
+    return shops
+
+def get_shopinfo(shop, id_, time):
+    return "xoxo"
+
+def add_shop(shop, shopinfo):
+    location = geolocator.geocode(shopinfo["address"])
+    lat, long = location.latitude, location.longitude
+    
+    newshop = Shop(
+    name=shopinfo["name"],
+    category=shopinfo["category"],
+    address=shopinfo["address"],
+    latitude=lat,
+    longitude=long,
+    storespace=shopinfo["storespace"],
+    maxcapacity=shopinfo["maxcapacity"]
+    )
+    print(newshop)
+    db.session.add(newshop)
+    db.session.commit()
+    
+    
     
 # jwt = JWT(app, authenticate, identity)
 
@@ -108,66 +172,7 @@ def hello():
         return app.response_class(response=json.dumps(shops),status=200,mimetype='application/json')
     return app.response_class(response=json.dumps("Service unavailable"),status=503,mimetype='application/json')
 
-def get_all_users():
-    users = [12] #load all users
-    username_table = {u.username: u for u in users}
-    userid_table = {u.id: u for u in users}
-    return username_table, userid_table
 
-def authenticate(username, password):
-    username_table, _ = get_all_users()
-    user = username_table.get(username, None)
-    if user and safe_str_cmp(user.password.encode('utf-8'), password.encode('utf-8')):
-        return user
-
-def identity(payload):
-    _, userid_table = get_all_users()
-    user_id = payload['identity']
-    return userid_table.get(user_id, None)
-
-
-
-def update_database(shop, id_, peoplechange):
-    pass
-
-def register(signin_data):
-    # check whether it is the correct format for signin_data
-    user = User(
-    name= signin_data["name"],
-    shopaddress= signin_data["shopaddress"],
-    login= signin_data["login"],
-    password= signin_data["password"]
-    )
-    db.session.add(user)
-    db.session.commit()
-    return True
-
-def login(username, password):
-    return True
-
-def get_shops():
-    shops = Shop.query.all()
-    return shops
-
-def get_shopinfo(shop, id_, time):
-    return "xoxo"
-
-def add_shop(shop, shopinfo):
-    lat = 10
-    long = 10
-    
-    newshop = Shop(
-    name=shopinfo["name"],
-    category=shopinfo["category"],
-    address=shopinfo["address"],
-    latitude=lat,
-    longitude=long,
-    storespace=shopinfo["storespace"],
-    maxcapacity=shopinfo["maxcapacity"]
-    )
-    db.session.add(newshop)
-    db.session.commit()
-    return True
 
 if __name__ == '__main__':
     app.run(debug=True)
