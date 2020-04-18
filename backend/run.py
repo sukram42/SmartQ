@@ -71,7 +71,7 @@ def identity(payload):
     user_id = payload['identity']
     return userid_table.get(user_id, None)
 
-def update_database(shop, id_, peoplechange):
+def update_database(id_, peoplechange):
     lastup = People.query.filter_by(shopid=id_).order_by(People.id.desc()).first()
     if lastup is None:
         num = peoplechange
@@ -127,10 +127,12 @@ def get_shops():
             "id": shop.id,
             "name": shop.name,
             "category": shop.category,
+            'latitude': shop.latitude, 
+            'longitude': shop.longitude
         })
     return shoplist
 
-def get_shopinfo(shop, id_, time):
+def get_shopinfo(id_, time):
     #peop = People.query.filter(People.lastupdate<time).order_by(People.id.desc()).first()
     p = People.query.filter_by(shopid = id_).order_by(People.id.desc()).first()
     shopinf = Shop.query.filter_by(id = p.shopid).first()
@@ -151,7 +153,7 @@ def get_shopinfo(shop, id_, time):
               })
     return peoplist
 
-def add_shop(shop, shopinfo):
+def add_shop(shopinfo):
     location = geolocator.geocode(shopinfo["address"])
     lat, long = location.latitude, location.longitude
     
@@ -164,7 +166,6 @@ def add_shop(shop, shopinfo):
     storespace=shopinfo["storespace"],
     maxcapacity=shopinfo["maxcapacity"]
     )
-    print(newshop)
     db.session.add(newshop)
     db.session.commit()
     
@@ -194,30 +195,30 @@ def login_user():
         return app.response_class(response=json.dumps("Access denied"),status=401,mimetype='application/json')
     return app.response_class(response=json.dumps("Service unavailable"),status=503,mimetype='application/json')
 
-@app.route('/<shop>/update', methods=['GET', 'POST'])
+@app.route('/update', methods=['GET', 'POST'])
 # @jwt_required()
-def update(shop):
+def update():
     
     if request.method == "POST":
         id_, peoplechange = request.json["id"], request.json["peoplechange"]
-        update_database(shop, id_, peoplechange)
-        return app.response_class(response=json.dumps(f"Updated {shop}\'s number of people"),status=200,mimetype='application/json')
+        update_database(id_, peoplechange)
+        return app.response_class(response=json.dumps(f"Updated {id_}\'s number of people"),status=200,mimetype='application/json')
     return app.response_class(response=json.dumps("Service unavailable"),status=503,mimetype='application/json')
 
-@app.route('/<shop>', methods=['GET', 'POST'])
-def shopinfo(shop):
+@app.route('/shopinfo', methods=['GET', 'POST'])
+def shopinfo():
     
     if request.method == "GET":
         id_, time = request.json["id"], request.json["time"]
-        shopinfo = get_shopinfo(shop, id_, time)
+        shopinfo = get_shopinfo(id_, time)
         return app.response_class(response=json.dumps(shopinfo),status=200,mimetype='application/json')
     elif request.method == "POST":
         shopinfo = request.json
-        add_shop(shop, shopinfo)
-        return app.response_class(response=json.dumps(f"{shop}\'s data was added in database"),status=200,mimetype='application/json')
+        add_shop(shopinfo)
+        return app.response_class(response=json.dumps(f"{id_}\'s data was added in database"),status=200,mimetype='application/json')
     return app.response_class(response=json.dumps("Service unavailable"),status=503,mimetype='application/json')
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/shops', methods=['GET', 'POST'])
 def hello():
     
     if request.method == "GET":
