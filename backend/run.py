@@ -1,12 +1,54 @@
+import os
 from flask import Flask, json, request
 from flask_jwt import JWT, jwt_required
 from backend import *
+from flask_sqlalchemy import SQLAlchemy
 
+project_dir = os.path.dirname(os.path.abspath(__file__))
+database_file = "sqlite:///{}".format(os.path.join(project_dir, "queuedatabase.db"))
 
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'super-secret'
 
+#setting up the database
+app.config["SQLALCHEMY_DATABASE_URI"] = database_file
+db = SQLAlchemy(app)
+
+class shop(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name=db.Column(db.String(80), nullable=False)
+    category=db.Column(db.String(80), nullable=False)
+    address=db.Column(db.String(80), nullable=False)
+    latitude=db.Column(db.Float, nullable=False)
+    longitude=db.Column(db.Float, nullable=False)
+    storespace=db.Column(db.Integer, nullable=False)
+    maxcapacity=db.Column(db.Integer, nullable=False)
+    
+    def __repr__(self):
+        return "<ID: {}>".format(self.id)
+
+class people(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    shopid=db.Column(db.Integer, nullable=False)
+    number=db.Column(db.Integer, nullable=False)
+    capacity=db.Column(db.Float, nullable=False)
+    waitingtime=db.Column(db.Integer, nullable=False)
+    lastupdate=db.Column(db.DateTime, nullable=False)
+    
+    def __repr__(self):
+        return "<ID: {}>".format(self.id)
+    
+class user(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name=db.Column(db.String(80), nullable=False)
+    shopaddress=db.Column(db.String(80), nullable=False)
+    login=db.Column(db.String(80), nullable=False)
+    password=db.Column(db.String(80), nullable=False)
+    
+    def __repr__(self):
+        return "<ID: {}>".format(self.id)
+    
 # jwt = JWT(app, authenticate, identity)
 
 success = True
