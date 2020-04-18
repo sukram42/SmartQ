@@ -125,8 +125,8 @@ def get_shops(all=True,id_=""):
     if all:
         shops = Shop.query.all()
     else:
-        p = People.query.filter_by(shopid = id_).order_by(People.id.desc()).first()
-        shops = Shop.query.filter_by(id = p.shopid).all()
+        s = Shop.query.filter_by(id = id_).order_by(Shop.id.desc()).first()
+        shops = People.query.filter_by(id =s.id).all()
     shoplist = []
     for shop in shops:
         shoplist.append({
