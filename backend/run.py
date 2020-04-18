@@ -121,8 +121,12 @@ def login(username, password):
     else:
         return False
 
-def get_shops():
-    shops = Shop.query.all()
+def get_shops(all=True,id_=""):
+    if all:
+        shops = Shop.query.all()
+    else:
+        p = People.query.filter_by(shopid = id_).order_by(People.id.desc()).first()
+        shops = Shop.query.filter_by(id = p.shopid).all()
     shoplist = []
     for shop in shops:
         shoplist.append({
@@ -177,7 +181,8 @@ def add_shop(shopinfo):
 def list_all_user_shops():
     try:
         if request.method == "GET":
-            shops = get_shops()
+            id_ = request.args.get("id")
+            shops = get_shops(False,id_)
             return app.response_class(response=json.dumps(shops),status=200,mimetype='application/json')
     except:
         return app.response_class(response=json.dumps("Service unavailable"),status=503,mimetype='application/json')
@@ -230,7 +235,7 @@ def shopinfo():
         elif request.method == "POST":
             shopinfo = request.json
             add_shop(shopinfo)
-            return app.response_class(response=json.dumps(f"{shopinfo["name"]}\'s data was added in database"),status=200,mimetype='application/json')
+            return app.response_class(response=json.dumps(f"{shopinfo['name']}\'s data was added in database"),status=200,mimetype='application/json')
     except:
         return app.response_class(response=json.dumps("Service unavailable"),status=503,mimetype='application/json')
 
