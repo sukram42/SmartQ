@@ -30,10 +30,10 @@ export default {
   }),
   methods: {
     changePeopleCount: function (change) {
-      console.log(config)
       return axios.post(`${config.baseApi}/update`, {
-        id: this.$route.params.shopID,
-        peoplechange: change
+        id: parseInt(this.$route.params.shopID),
+        peoplechange: change,
+        userid: parseInt(window.localStorage.getItem('user'))
       })
     },
     onBtnUpClicked: function () {
