@@ -5,6 +5,7 @@
       <div class="links">
         <router-link to="/">Home</router-link>
         <router-link to="/shop">Shop</router-link>
+        <router-link to="/counter/sdjflk">Counter</router-link>
       </div>
     </header>
     <div class="content">
