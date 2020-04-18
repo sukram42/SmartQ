@@ -37,24 +37,20 @@ export default {
       })
     },
     onBtnUpClicked: function () {
-      this.changePeopleCount(1).then(() => {
-        // TODO Add the update
-      }).catch((e) => {
+      this.changePeopleCount(1).then().catch((e) => {
         this.error = e
       })
       this.count += 1
     },
     onBtnDownClicked: function () {
-      this.changePeopleCount(1).then(() => {
-        // TODO Add the update
-      }).catch((e) => {
+      this.changePeopleCount(1).then().catch((e) => {
         this.error = e
       })
       this.count -= this.count > 0 ? 1 : 0
     }
   },
   async mounted () {
-    // this.count = await axios.get('')
+    this.count = await axios.get(`${config.baseApi}/shopinfo?id=${this.$route.shopID}&userid=${window.localStorage.getItem('user')}`)
   }
 }
 </script>

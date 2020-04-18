@@ -17,7 +17,7 @@
     <div class="waiting">
       <div :class="{'indicator': 1, 'indicator-green': shop.waiting < 7 ? 1:0, 'indicator-red': shop.waiting < 7 ? 0:1}"></div>
       <div class="waiting-text">
-        <div class="waiting-number"> {{shop.waiting}} </div>
+        <div class="waiting-number"> {{shop.waitingtime}} </div>
         <div class="waiting-label"> Waiting</div>
       </div>
     </div>
@@ -42,30 +42,18 @@ import trend from 'vuetrend'
 export default {
   name: 'ShopDetailPage',
   data: () => ({
-    shop: {
-      id: 1,
-      name: 'Penny Schwabing',
-      category: 'groceries',
-      address: 'Musterweg 15, 80807 München',
-      latitude: 48.2,
-      longitude: 11.5,
-      storespace: 800,
-      maxcapacity: 50,
-      capacity: 92.5,
-      waiting: 6,
-      lastupdate: {}
-    }
+    shop: null
   }),
   methods: {
     openInMaps: function () {
       window.open(`http://www.google.com/maps/place/${this.shop.latitude},${this.shop.longitude}`)
     },
     loadShopInfo: async function () {
-      return axios.get(`${config.baseApi}/shopInfo&id=${this.$route.params.shopID}`)
+      return axios.get(`${config.baseApi}/shopinfo?id=${this.$route.params.shopID}`)
     }
   },
   async mounted () {
-    this.shop = await this.loadShopInfo()
+    this.shop = (await this.loadShopInfo()).data[0]
   }
 }
 </script>

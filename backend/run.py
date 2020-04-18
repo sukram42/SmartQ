@@ -162,7 +162,8 @@ def get_shopinfo(id_):
     peoplist = []
     for pep in peop:
         peoplist.append({
-               'id': shopinf.id, 
+               'id': shopinf.id,
+               'name': shopinf.name,
                'category': shopinf.category, 
                'address': shopinf.address, 
                'latitude': shopinf.latitude, 
