@@ -175,6 +175,18 @@ def add_shop(shopinfo):
     db.session.add(newshop)
     db.session.commit()
     
+    ###
+    
+    newpeop = People(
+        shopid = newshop.id,
+        number = 0,
+        capacity = 0,
+        waitingtime = 0,
+        lastupdate = datetime.datetime.now()
+    )
+    db.session.add(newpeop)
+    db.session.commit()
+    
 # jwt = JWT(app, authenticate, identity)
 
 @app.route('/usershops', methods=['GET', 'POST'])
