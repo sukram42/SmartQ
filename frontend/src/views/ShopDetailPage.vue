@@ -44,8 +44,7 @@ export default {
       maxcapacity: 50,
       capacity: 92.5,
       waiting: 6,
-      lastupdate: {},
-      website: 'www.google.de'
+      lastupdate: {}
     }
   }),
   methods: {
