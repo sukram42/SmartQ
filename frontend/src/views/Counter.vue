@@ -8,6 +8,12 @@
       <div class="waiting">
         Waiting
       </div>
+      <div class="cap">
+        {{ cap * 100 }} % of {{ maxCap }}
+      </div>
+      <div class="lblcap">
+        People in the Store
+      </div>
     </div>
     <div class="btn-down">
       <button v-on:click="()=>onBtnDownClicked()">-</button>
@@ -26,7 +32,9 @@ export default {
   name: 'Counter',
   data: () => ({
     count: 0,
-    error: null
+    error: null,
+    cap: 0.32,
+    maxCap: 200
   }),
   methods: {
     changePeopleCount: function (change) {
@@ -37,20 +45,29 @@ export default {
       })
     },
     onBtnUpClicked: function () {
-      this.changePeopleCount(1).then().catch((e) => {
+      this.changePeopleCount(1).then(() => this.updateMeasures(false)).catch((e) => {
         this.error = e
       })
       this.count += 1
     },
     onBtnDownClicked: function () {
-      this.changePeopleCount(1).then().catch((e) => {
+      this.changePeopleCount(1).then(() => this.updateMeasures(false)).catch((e) => {
         this.error = e
       })
       this.count -= this.count > 0 ? 1 : 0
+    },
+    updateMeasures: async function (countCounting) {
+      const answer = await axios.get(`${config.baseApi}/shopinfo?id=${this.$route.params.shopID}&userid=${window.localStorage.getItem('user')}`)
+
+      if (answer.data.length) {
+        this.count = countCounting ? answer.data[0].waitingtime : this.count
+        this.cap = Math.round(answer.data[0].capacity * 100) / 100
+        this.maxCap = answer.data[0].maxcapacity
+      }
     }
   },
   async mounted () {
-    this.count = await axios.get(`${config.baseApi}/shopinfo?id=${this.$route.shopID}&userid=${window.localStorage.getItem('user')}`)
+    this.updateMeasures(true)
   }
 }
 </script>
@@ -99,5 +116,12 @@ export default {
   .waiting {
     font-weight: lighter;
     font-size: 3em;
+  }
+  .cap{
+    font-size: 2em;
+    padding-top: 1em;
+  }
+  .lblcap{
+    font-size: 1em;
   }
 </style>
