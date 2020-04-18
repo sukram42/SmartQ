@@ -30,6 +30,7 @@ class Shop(db.Model):
     longitude=db.Column(db.Float, nullable=False)
     storespace=db.Column(db.Integer, nullable=False)
     maxcapacity=db.Column(db.Integer, nullable=False)
+    userid=db.Column(db.Integer, nullable=False)
     
     def __repr__(self):
         return "<ID: {}>".format(self.id)
@@ -49,6 +50,15 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name=db.Column(db.String(80), nullable=False)
     shopaddress=db.Column(db.String(80), nullable=False)
+    login=db.Column(db.String(80), nullable=False)
+    password=db.Column(db.String(80), nullable=False)
+    
+    def __repr__(self):
+        return "<ID: {}>".format(self.id)
+    
+class CurrentUser(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    userid=db.Column(db.String(80), nullable=False)
     login=db.Column(db.String(80), nullable=False)
     password=db.Column(db.String(80), nullable=False)
     
@@ -106,7 +116,7 @@ def register(signin_data):
     # check whether it is the correct format for signin_data
     user = User(
     name= signin_data["name"],
-    shopaddress= signin_data["shopaddress"],
+    shopaddress= "DUMMY",
     login= signin_data["login"],
     password= signin_data["password"]
     )
@@ -117,12 +127,22 @@ def login(username, password):
     #pw = User.query.filter(login = username).last()
     pw = User.query.filter_by(login=username).first()
     if(pw.password==password):
-        return True
+        curUsr = CurrentUser(
+            userid= pw.id,
+            login= pw.login,
+            password= pw.password
+            )
+        db.session.add(curUsr)
+        db.session.commit()
+        return pw.id
     else:
         return False
 
-def get_shops():
-    shops = Shop.query.all()
+def get_shops(all=True,id_=""):
+    if all:
+        shops = Shop.query.all()
+    else:
+        shops = Shop.query.filter_by(userid = id_).all()
     shoplist = []
     for shop in shops:
         shoplist.append({
@@ -142,7 +162,7 @@ def get_shopinfo(id_):
     peoplist = []
     for pep in peop:
         peoplist.append({
-                'id': shopinf.id, 
+               'id': shopinf.id, 
                'category': shopinf.category, 
                'address': shopinf.address, 
                'latitude': shopinf.latitude, 
@@ -166,68 +186,101 @@ def add_shop(shopinfo):
     latitude=lat,
     longitude=long,
     storespace=shopinfo["storespace"],
-    maxcapacity=shopinfo["maxcapacity"]
+    maxcapacity=shopinfo["maxcapacity"],
+    userid=shopinfo["userid"]
     )
     db.session.add(newshop)
     db.session.commit()
     
+    ###
+    
+    newpeop = People(
+        shopid = newshop.id,
+        number = 0,
+        capacity = 0,
+        waitingtime = 0,
+        lastupdate = datetime.datetime.now()
+    )
+    db.session.add(newpeop)
+    db.session.commit()
+    
 # jwt = JWT(app, authenticate, identity)
+
+@app.route('/usershops', methods=['GET', 'POST'])
+def list_all_user_shops():
+    try:
+        if request.method == "GET":
+            id_ = request.args.get("id")
+            shops = get_shops(False,id_)
+            return app.response_class(response=json.dumps(shops),status=200,mimetype='application/json')
+    except:
+        return app.response_class(response=json.dumps("Service unavailable"),status=503,mimetype='application/json')
 
 @app.route('/register', methods=['GET', 'POST'])
 # @jwt_required()
 def register_user():
-    
-    if request.method == "POST":
-        signin_data = request.json
-        register(signin_data)
-        
-        return app.response_class(response=json.dumps("User was added"),status=200,mimetype='application/json')
-    return app.response_class(response=json.dumps("Service unavailable"),status=503,mimetype='application/json')
+    try:
+        if request.method == "POST":
+            signin_data = request.json
+            register(signin_data)
+
+            return app.response_class(response=json.dumps("User was added"),status=200,mimetype='application/json')
+    except:
+        return app.response_class(response=json.dumps("Service unavailable"),status=503,mimetype='application/json')
 
 @app.route('/signin', methods=['GET', 'POST'])
 # @jwt_required()
 def login_user():
-    
-    if request.method == "POST":
-        username, password = request.json["login"], request.json["password"]
-        access_granted = login(username, password)
-        
-        if access_granted:
-            return app.response_class(response=json.dumps("Access granted"),status=200,mimetype='application/json')
-        return app.response_class(response=json.dumps("Access denied"),status=401,mimetype='application/json')
-    return app.response_class(response=json.dumps("Service unavailable"),status=503,mimetype='application/json')
+    try:
+        if request.method == "POST":
+            username, password = request.json["login"], request.json["password"]
+            id_ = login(username, password)
+
+            if id_ != False:
+                return app.response_class(response=json.dumps(id_),status=200,mimetype='application/json')
+            return app.response_class(response=json.dumps("Access denied"),status=401,mimetype='application/json')
+    except:
+        return app.response_class(response=json.dumps("Service unavailable"),status=503,mimetype='application/json')
 
 @app.route('/update', methods=['GET', 'POST'])
 # @jwt_required()
 def update():
-    
-    if request.method == "POST":
-        id_, peoplechange = request.json["id"], request.json["peoplechange"]
-        update_database(id_, peoplechange)
-        return app.response_class(response=json.dumps(f"Updated {id_}\'s number of people"),status=200,mimetype='application/json')
-    return app.response_class(response=json.dumps("Service unavailable"),status=503,mimetype='application/json')
+    try:
+        if request.method == "POST":
+            id_, peoplechange, userid = request.json["id"], request.json["peoplechange"], request.json["userid"]
+            if CurrentUser.query.filter_by(userid = userid) != None:
+                update_database(id_, peoplechange)
+                return app.response_class(response=json.dumps(f"Updated {id_}\'s number of people"),status=200,mimetype='application/json')
+            else:
+                return app.response_class(response=json.dumps("Access denied"),status=401,mimetype='application/json')
+    except:
+        return app.response_class(response=json.dumps("Service unavailable"),status=503,mimetype='application/json')
 
 @app.route('/shopinfo', methods=['GET', 'POST'])
 def shopinfo():
-    
-    if request.method == "GET":
-        id_ = request.args.get('id')
-#         id_, time = request.json["id"], request.json["time"]
-        shopinfo = get_shopinfo(id_)
-        return app.response_class(response=json.dumps(shopinfo),status=200,mimetype='application/json')
-    elif request.method == "POST":
-        shopinfo = request.json
-        add_shop(shopinfo)
-        return app.response_class(response=json.dumps(f"{id_}\'s data was added in database"),status=200,mimetype='application/json')
-    return app.response_class(response=json.dumps("Service unavailable"),status=503,mimetype='application/json')
+#     try:
+        if request.method == "GET":
+            id_ = request.args.get('id')
+            shopinfo = get_shopinfo(id_)
+            return app.response_class(response=json.dumps(shopinfo),status=200,mimetype='application/json')
+        elif request.method == "POST":
+            shopinfo = request.json
+            if CurrentUser.query.filter_by(userid = shopinfo["userid"]) != None:
+                add_shop(shopinfo)
+                return app.response_class(response=json.dumps(f"{shopinfo['name']}\'s data was added in database"),status=200,mimetype='application/json')
+            else:
+                return app.response_class(response=json.dumps("Access denied"),status=401,mimetype='application/json')
+#     except:
+#         return app.response_class(response=json.dumps("Service unavailable"),status=503,mimetype='application/json')
 
 @app.route('/shops', methods=['GET', 'POST'])
-def hello():
-    
-    if request.method == "GET":
-        shops = get_shops()
-        return app.response_class(response=json.dumps(shops),status=200,mimetype='application/json')
-    return app.response_class(response=json.dumps("Service unavailable"),status=503,mimetype='application/json')
+def list_all_shops():
+    try:
+        if request.method == "GET":
+            shops = get_shops()
+            return app.response_class(response=json.dumps(shops),status=200,mimetype='application/json')
+    except:
+        return app.response_class(response=json.dumps("Service unavailable"),status=503,mimetype='application/json')
 
 
 
