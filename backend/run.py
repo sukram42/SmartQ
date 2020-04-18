@@ -31,6 +31,9 @@ class Shop(db.Model):
     storespace=db.Column(db.Integer, nullable=False)
     maxcapacity=db.Column(db.Integer, nullable=False)
     
+    #added userid
+    userid=db.Column(db.String(80), nullable=True)
+    
     def __repr__(self):
         return "<ID: {}>".format(self.id)
 
@@ -79,7 +82,7 @@ def update_database(id_, peoplechange):
         num = peoplechange
     else:
         num = lastup.number + peoplechange
-    shopinf = Shop.query.filter_by(id=id_).first()
+    shopinf = Shop.query.filter_by(userid=id_).first()
     if lastup is None:
         maxcap = 100
     else:
@@ -125,8 +128,9 @@ def get_shops(all=True,id_=""):
     if all:
         shops = Shop.query.all()
     else:
-        p = People.query.filter_by(shopid = id_).order_by(People.id.desc()).first()
-        shops = Shop.query.filter_by(id = p.shopid).all()
+        #p = Shop.query.filter_by(shopid = id_).order_by(People.id.desc()).first()
+        shops = Shop.query.filter_by(id = id_).all()
+        
     shoplist = []
     for shop in shops:
         shoplist.append({
