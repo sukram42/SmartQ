@@ -1,24 +1,25 @@
 <template>
   <div class="infos">
     <div class="image">
-      <v-btn class="back-btn" color="#02FF04" v-on:click="()=>$router.go(-1)"> Go back</v-btn>
+      <v-btn @click="()=>$router.go(-1)" class="ma-2" color="orange darken-2" dark>
+        <v-icon dark left>mdi-arrow-left</v-icon>Back
+      </v-btn>
     </div>
     <div class="store-info">
       <div class="store">{{shop.category}}</div>
       <div class="name">{{ shop.name }}</div>
-      <div class="address">
-        <div>{{ shop.address.split(',')[0] }}</div>
-        <div class="divider">|</div>
-        <div> {{ shop.address.split(',')[1] }}</div>
-      </div>
+      <div class="address">{{ shop.address }}</div>
     </div>
-    <div class="shareinfos">
-      <img alt="show on map" src="../assets/iconmonstr-map-8-240.png" v-on:click="()=>openInMaps()">
-      <img alt="show website" src="../assets/iconmonstr-networking-6-240.png" v-on:click="()=>openWebsite()">
+    <div class="shareinfos" v-on:click="()=>openInMaps()">
+      <img alt="show on map" src="../assets/iconmonstr-map-8-240.png">
+      <div> Open in Maps </div>
     </div>
     <div class="waiting">
-      <div class="waiting-number"> 999 </div>
-      <div class="waiting-label"> Waiting</div>
+      <div :class="{'indicator': 1, 'indicator-green': shop.waiting < 7 ? 1:0, 'indicator-red': shop.waiting < 7 ? 0:1}"></div>
+      <div class="waiting-text">
+        <div class="waiting-number"> {{shop.waiting}} </div>
+        <div class="waiting-label"> Waiting</div>
+      </div>
     </div>
     <div class="chart">
     </div>
@@ -42,21 +43,17 @@ export default {
       storespace: 800,
       maxcapacity: 50,
       capacity: 92.5,
-      waitingtime: 5,
+      waiting: 6,
       lastupdate: {},
       website: 'www.google.de'
     }
   }),
   methods: {
-    openInMaps: () => {
-      window.open(`http://www.google.com/maps/place/${this.shop.lat},${this.shop.lng}`)
-    },
-    openWebsite: () => {
-      const website = this.shop.website
-      window.open(`${website}`)
+    openInMaps: function () {
+      window.open(`http://www.google.com/maps/place/${this.shop.latitude},${this.shop.longitude}`)
     },
     loadShopInfo: async function () {
-      return axios.get(`${config.baseApi}/shopInfo/${this.$route.params.shopID}`)
+      return axios.get(`${config.baseApi}/shopInfo&id=${this.$route.params.shopID}`)
     }
   },
   async mounted () {
@@ -77,7 +74,6 @@ export default {
     width: 100vw;
     max-width: 100%;
     max-height: 100%;
-    min-height: calc(100vh - 50px);
     display: grid;
     align-items: stretch;
     grid-template-columns: 5% 1fr 1fr 5%;
@@ -99,8 +95,9 @@ export default {
   .store-info {
     grid-area: name;
     display: flex;
+    padding: 4% 0 0 0;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: flex-start;
   }
   .store{
@@ -118,6 +115,13 @@ export default {
     grid-area: wait;
     margin: 0.5em;
     display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+  .waiting-text{
+    margin: 0.5em;
+    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -133,22 +137,34 @@ export default {
     grid-area: graph;
   }
   .address{
-    display: flex;
-    justify-content: center;
-    margin: 3% 0;
-    width: 100%;
+    padding-top: 2%;
   }
   .address > * {
     padding: 0 1%;
     word-break: keep-all;
     text-wrap: avoid;
-    height: 1em;
   }
+  .indicator {
+    width: 1em;
+    height: 7em;
+    margin-right: 1em;
+  }
+  .indicator-green {
+    background-color: #42b983;
+  }
+  .indicator-red {
+    background-color: #B9584A;
+  }
+
   .shareinfos{
     grid-area: info;
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
+  }
+  .shareinfos > div {
+    padding-top: 1em;
   }
 
   @media only screen and (min-width: 600px) {

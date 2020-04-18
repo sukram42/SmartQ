@@ -12,8 +12,8 @@
       <maps-marker
         v-for="shop in shownShops"
         :key="shop.id"
-        :lat="shop.lat"
-        :lng="shop.lat"
+        :lat="shop.latitude"
+        :lng="shop.longitude"
         :onClick="onMarkerClick"
         :shop="shop"
       />
@@ -32,13 +32,7 @@ export default {
   data: () => ({
     map: null,
     searchString: '',
-    shops: [{
-      lat: 10,
-      lon: 10,
-      id: 'jfsdkfj',
-      name: 'Rewestore',
-      category: 'grocery'
-    }]
+    shops: []
   }),
   computed: {
     shownShops: function () {
@@ -49,7 +43,7 @@ export default {
   },
   methods: {
     onMarkerClick (shop) {
-      this.$router.push({ path: `shopDetail/${shop.name}` })
+      this.$router.push({ path: `shopDetail/${shop.id}` })
     },
     getMap (callback) {
       /* eslint-disable */
@@ -77,7 +71,7 @@ export default {
       mapTypeControl: false
     })
 
-    this.shops = await this.loadShops()
+    this.shops = (await this.loadShops()).data
   }
 }
 </script>
@@ -93,13 +87,9 @@ export default {
     border-radius: 5px;
     z-index: 1000;
     background-color: white;
-
-    padding: 1% 4% 0 4%;
-
   }
   .info-field {
     font-size: 0.8em;
-    padding: -3% 0;
   }
   #map {
     height: calc(100vh - 50px);
