@@ -92,6 +92,7 @@ export default {
       }).then((id) => {
         if (id.data) {
           window.localStorage.setItem('user', id.data)
+          this.$parent.isLoggedIn = true
           this.$router.push('/shop')
         }
       })

@@ -7,7 +7,7 @@
         <router-link v-if="isLoggedIn" to="/shop">Shop</router-link>
 <!--        <router-link to="/counter/sdjflk">Counter</router-link>-->
         <router-link  v-if="!isLoggedIn" to="/login">Login</router-link>
-        <v-btn v-if="isLoggedIn" @click="logout()">  Logout </v-btn>
+        <a v-if="isLoggedIn" @click="logout()">Logout</a>
       </div>
     </header>
     <div class="content">
@@ -19,14 +19,13 @@
 <script>
 export default {
   name: 'App',
-  computed: {
-    isLoggedIn: function () {
-      return window.localStorage.getItem('user')
-    }
-  },
+  data: () => ({
+    isLoggedIn: true
+  }),
   methods: {
     logout: function () {
       window.localStorage.removeItem('user')
+      this.isLoggedIn = false
       this.$router.push('/login')
     }
   }
