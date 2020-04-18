@@ -116,7 +116,7 @@ def register(signin_data):
     # check whether it is the correct format for signin_data
     user = User(
     name= signin_data["name"],
-    shopaddress= signin_data["shopaddress"],
+    shopaddress= "DUMMY",
     login= signin_data["login"],
     password= signin_data["password"]
     )
