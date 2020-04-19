@@ -51,6 +51,7 @@ export default {
           userid: window.localStorage.getItem('user')
         }
         )
+        .then(this.$router.push('/shop'))
     }
   }
 }
