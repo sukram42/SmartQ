@@ -1,6 +1,6 @@
 <template>
   <div class="counter-group">
-    <div class="error" v-if="error"> {{ error }}</div>
+    <button class="QR" v-on:click="()=>showQR()">Show QR-Code instead</button>
     <div class="count">
       <div class="number">
         {{count}}
@@ -39,6 +39,7 @@ export default {
     cap: 0.32,
     maxCap: 200
   }),
+
   methods: {
     changePeopleCount: function (change) {
       return axios.post(`${config.baseApi}/update`, {
@@ -46,6 +47,9 @@ export default {
         peoplechange: change,
         userid: parseInt(window.localStorage.getItem('user'))
       })
+    },
+    showQR: function () {
+      this.$router.push('/qrCode/12')
     },
     onBtnUpClicked: function () {
       this.changePeopleCount(1).then(() => this.updateMeasures(true)).catch((e) => {
@@ -79,14 +83,15 @@ export default {
   .counter-group{
     display: grid;
     grid-template-columns: 10% 1fr 1fr 10%;
-    grid-template-rows: 20% 60% 1fr 10%;
+    grid-template-rows: 5% 60% 1fr 50%;
     grid-template-areas:
       " . error error ."
       " . counter2 counter2 ."
       " . counter1 counter3 ."
-  ". . . .";
+       ". . . .";
     height: calc(100vh - 50px )
   }
+
   .btn-up {
     grid-area: counter1;
   }
@@ -110,10 +115,9 @@ export default {
   .number {
     font-size: 10em;
   }
-  .error {
-    padding: 1em;
+  .QR{
     grid-area: error;
-    color: red;
+    width: 100%;
     font-size: 1em;
   }
   .waiting {

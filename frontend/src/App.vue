@@ -19,7 +19,7 @@
 export default {
   name: 'App',
   data: () => ({
-    isLoggedIn: window.localStorage.getItem('user')
+    isLoggedIn: window.localStorage.getItem('user') != null
   }),
   methods: {
     logout: function () {
