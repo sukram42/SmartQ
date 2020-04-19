@@ -4,7 +4,7 @@
 
 Starting this Monday at least small shops can finally open again in Germany. This will be a challenge because there are hygiene regulations to comply with, like distancing measures. Many of the bigger supermarket chains enforced this by hiring security companies. We want to make the queueing process a better experience both for shops and customers.
 
-##What it does
+## What it does
 It provides the shops a way to keep track of how crowded the shop is, when to let people queue up and to estimate how many people are currently waiting. To achieve this, the security guard can sign up on our platform and update the number of people going in and out. The portal keeps track of the number of people in the shop and in the queue and provides the security guard with important information on how to manage the queue.
 
 That information is not only visible to the registered security guard but also visible to customers. The customers are able to look at shops in their area and can see how crowded the shops are and how many people are already waiting in the queue.
