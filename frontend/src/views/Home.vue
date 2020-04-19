@@ -16,7 +16,7 @@
         :lng="shop.longitude"
         :onClick="onMarkerClick"
         :shop="shop"
-        :color="shop.waitingtime > 5"
+        :color="shop.waitingtime > 5?'red':'green'"
       />
     </div>
   </div>
