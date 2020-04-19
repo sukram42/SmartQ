@@ -9,7 +9,7 @@
         Waiting
       </div>
       <div class="cap" v-if="cap>0">
-        {{ cap * 100 }} % of {{ maxCap }}
+        {{ cap }} % of {{ maxCap }}
       </div>
       <div class="cap" v-if="cap<=0">
         No
@@ -53,16 +53,18 @@ export default {
       })
     },
     onBtnDownClicked: function () {
-      this.changePeopleCount(-1).then(() => this.updateMeasures(true)).catch((e) => {
-        this.error = e
-      })
+      if (this.cap > 0) {
+        this.changePeopleCount(-1).then(() => this.updateMeasures(true)).catch((e) => {
+          this.error = e
+        })
+      }
     },
     updateMeasures: async function (countCounting) {
       const answer = await axios.get(`${config.baseApi}/shopinfo?id=${this.$route.params.shopID}&userid=${window.localStorage.getItem('user')}`)
 
       if (answer.data.length) {
         this.count = countCounting ? answer.data[0].waitingtime : this.count
-        this.cap = Math.round(answer.data[0].capacity * 100) / 100
+        this.cap = (answer.data[0].capacity * 100).toFixed(2)
         this.maxCap = answer.data[0].maxcapacity
       }
     }
