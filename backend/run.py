@@ -156,12 +156,15 @@ def get_shops(all=True, id_=""):
         shops = Shop.query.filter_by(userid=id_).all()
     shoplist = []
     for shop in shops:
+        peop = People.query.filter_by(shopid=shop.id).order_by(People.id.desc()).first()
         shoplist.append({
             "id": shop.id,
             "name": shop.name,
             "category": shop.category,
             'latitude': shop.latitude,
-            'longitude': shop.longitude
+            'longitude': shop.longitude,
+            'waitingtime': peop.waitingtime,
+            'capacity': peop.capacity
         })
     return shoplist
 
