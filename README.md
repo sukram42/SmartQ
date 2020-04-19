@@ -1,3 +1,5 @@
+This project was created at the Hackatum Covid19 Hackerthon from 17th - 19th April and won the second place within the Business Track :) See https://devpost.com/software/smartqueue-4im8hf for more information.
+
 ## Inspiration
 Starting this Monday at least small shops can finally open again in Germany. This will be a challenge because there are hygiene regulations to comply with, like distancing measures. 
 Many of the bigger supermarket chains enforced this by hiring security companies. We want to make the queueing process a better experience both for shops and customers.
