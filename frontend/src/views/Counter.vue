@@ -1,6 +1,6 @@
 <template>
   <div class="counter-group">
-    <div class="error" v-if="error"> {{ error }}</div>
+    <button class="QR" v-on:click="()=>showQR()">Show QR-Code instead</button>
     <div class="count">
       <div class="number">
         {{count}}
@@ -24,30 +24,22 @@
     <div class="btn-up">
       <button v-on:click="()=>onBtnUpClicked()">+</button>
     </div>
-    <div class="qrCode">
-      <h3>Scan this if you want to join the Queue of this Store:</h3> <br/>
-      <qrcodevue :value="qradd" size="400"></qrcodevue>
-    </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
 import { config } from '../config/config.js'
-import Qrcodevue from 'qrcode.vue'
 
 export default {
   name: 'Counter',
   data: () => ({
-    qradd: 'http://dies-das-ananas.net/addUser?id=3&userid=3',
     count: 0,
     error: null,
     cap: 0.32,
     maxCap: 200
   }),
-  components: {
-    Qrcodevue
-  },
+
   methods: {
     changePeopleCount: function (change) {
       return axios.post(`${config.baseApi}/update`, {
@@ -55,6 +47,9 @@ export default {
         peoplechange: change,
         userid: parseInt(window.localStorage.getItem('user'))
       })
+    },
+    showQR: function () {
+      this.$router.push('/qrCode/12')
     },
     onBtnUpClicked: function () {
       this.changePeopleCount(1).then(() => this.updateMeasures(true)).catch((e) => {
@@ -80,8 +75,6 @@ export default {
   },
   async mounted () {
     this.updateMeasures(true)
-    const link = 'http://dies-das-ananas.net/addUser?id=' + this.$route.params.shopID + '&userid=' + window.localStorage.getItem('user')
-    this.qradd = link
   }
 }
 </script>
@@ -127,10 +120,9 @@ export default {
   .number {
     font-size: 10em;
   }
-  .error {
-    padding: 1em;
+  .QR{
     grid-area: error;
-    color: red;
+    width: 100%;
     font-size: 1em;
   }
   .waiting {
