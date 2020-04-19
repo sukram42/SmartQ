@@ -51,9 +51,6 @@ export default {
           userid: window.localStorage.getItem('user')
         }
         )
-        .then(result => {
-          console.log(result)
-        })
     }
   }
 }
@@ -64,19 +61,18 @@ export default {
     margin: 0%;
     padding: 30px;
     padding-bottom: 50px;
-    background: #2c3e50 !important;
-    min-width: 400px;
+    background: #DDD !important;
+    min-width: 350px;
 }
-
 .shopDetails{
-    background: #42b983;
+    background: #6ca39e;
     padding: 10px;
     border-radius: 30px;
 }
 
 .editList{
     border-collapse: collapse;
-    min-width: 300px;
+    min-width: 260px;
     max-width: 80%;
     width: 70%;
 }
@@ -85,11 +81,10 @@ export default {
     margin: 10px;
     margin-left: 20px;
     margin-right: 20px;
-    color: teal;
 }
 
 .editText{
-  background: #A4C1BA;
+  background: #CCC;
   border-radius: 20px;
   padding-left: 20px;
   padding-right: 20px;
