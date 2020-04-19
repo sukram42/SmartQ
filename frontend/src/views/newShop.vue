@@ -31,7 +31,7 @@ import { config } from '../config/config.js'
 export default {
   data: function () {
     return {
-      categoryItems: ['food', 'groceries', 'restaurant'],
+      categoryItems: ['groceries', 'pharmacy', 'restaurant', 'hardware-store'],
       name: '',
       category: '',
       address: '',

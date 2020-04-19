@@ -44,6 +44,9 @@ export default {
   },
   methods: {
     onMarkerClick (shop) {
+      window.localStorage.setItem('lat', this.map.getCenter().lat)
+      window.localStorage.setItem('lng', this.map.getCenter().lng)
+      window.localStorage.setItem('zoom', this.map.getZoom())
       this.$router.push({ path: `shopDetail/${shop.id}` })
     },
     /**
@@ -68,10 +71,17 @@ export default {
     }
   },
   async mounted () {
+    const lat = window.localStorage.getItem('lat')
+    const lng = window.localStorage.getItem('lng')
+    const zoom = window.localStorage.getItem('zoom')
+
     // Map configurations
     this.map = new window.google.maps.Map(this.$refs.map, {
-      center: { lat: 48.1362423, lng: 11.5791216 },
-      zoom: 8,
+      center: {
+        lat: parseFloat(lat) || 48.137357,
+        lng: parseFloat(lng) || 11.575202
+      },
+      zoom: parseFloat(zoom) || 15,
       streetViewControl: false,
       fullscreenControl: false,
       mapTypeControl: false
