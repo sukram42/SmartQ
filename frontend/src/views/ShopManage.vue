@@ -2,12 +2,12 @@
     <div>
       <center>
       <v-app class="shoppanel">
-      <h2 class="headerStuff">__StoreOwnerX__ </h2>
-        <div v-for="shop in shops" :key="shop.id">
+      <h2 class="headerStuff">Hallo! {{ name }} </h2>
+        <div :key="shop.id" v-for="shop in shops">
           <shopDetails v-bind:shop="shop"/>
         </div>
 
-            <v-btn class="addBtn" position="center" fab dark large color="cyan" v-bind:to="'newShop/'">
+            <v-btn class="addBtn" color="cyan" dark fab large position="center" v-bind:to="'newShop/'">
               <v-icon dark>mdi-plus</v-icon>
             </v-btn>
       </v-app>
@@ -17,8 +17,12 @@
 
 <script>
 import shopDetails from './ShopManageDetail'
+
 export default {
   name: 'ShopManage',
+  data: () => ({
+    name: 'Jürgen Mustermann'
+  }),
   components: {
     shopDetails
   },
@@ -31,11 +35,11 @@ export default {
     margin: 0%;
     padding: 30px;
     padding-bottom: 50px;
-    background: #2c3e50;
+    background: #EEE;
 }
 
 .headerStuff {
-  background: #42b983;
+  background: #DDD;
   border-radius: 20px;
   margin: 2%;
   padding: 10px;

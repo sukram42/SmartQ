@@ -20,7 +20,7 @@ const routes: Array<RouteConfig> = [
     component: ShopDetailPage
   },
   {
-    path: '/counter/:id',
+    path: '/counter/:shopID',
     name: 'Counter',
     component: Counter
   },

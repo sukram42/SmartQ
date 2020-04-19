@@ -23,14 +23,14 @@
                 </tr>
             </table>
             </center>
-            <v-btn class="editButtons" fab dark large color="cyan" v-bind:to="'counter/' + shop.id">
+            <v-btn class="editButtons" fab dark large color="#2c3e50" v-bind:to="'counter/' + shop.id">
               <v-icon dark>mdi-counter</v-icon>
             </v-btn>
-            <v-btn class="editButtons" fab dark large color="cyan" @click="$emit('edit-shop',shop); edit(shop)">
-                <v-icon dark>{{editIcon}}</v-icon>
+            <v-btn class="editButtons" fab dark large color="#2c3e50" v-bind:to="'shopdetail/' + shop.id">
+                <v-icon dark>mdi-launch</v-icon>
             </v-btn>
-            <v-btn class="editButtons" fab dark large color="cyan" @click="$emit('remove-shop',shop)">
-                <v-icon dark>mdi-close-outline</v-icon>
+            <v-btn class="editButtons" fab dark large color="#2c3e50" @click="$emit('edit-shop',shop); edit(shop)">
+                <v-icon dark>{{editIcon}}</v-icon>
             </v-btn>
         </div>
     </div>
@@ -38,12 +38,13 @@
 
 <script>
 export default {
+
   name: 'ShopDetails',
   props: ['shop'],
   data: function () {
     return {
       editing: false,
-      categoryItems: ['food', 'groceries', 'restaurant'],
+      categoryItems: ['groceries', 'pharmacy', 'restaurant', 'hardware-store'],
       editIcon: 'mdi-pencil'
     }
   },
@@ -73,8 +74,8 @@ export default {
 <style scoped>
 
 .shopHeader{
-    background: #42b983;
-    min-width: 400px;
+    background: #6ca39e;
+    min-width: 355px;
     padding: 10px;
     margin-top: 10px;
     margin-left: 2%;
@@ -84,7 +85,7 @@ export default {
 }
 
 .shopDetails{
-    background: #42b983;
+    background: #6ca39e;
     padding: 10px;
     border-radius: 30px;
 }
@@ -100,18 +101,17 @@ export default {
     margin: 10px;
     margin-left: 20px;
     margin-right: 20px;
-    color: teal;
 }
 
 .nonEditText{
-  background: #6CA39E;
+  background: #AAA;
   border-radius: 20px;
   padding-left: 20px;
   padding-right: 20px;
 }
 
 .editText{
-  background: #A4C1BA;
+  background: #CCC;
   border-radius: 20px;
   padding-left: 20px;
   padding-right: 20px;

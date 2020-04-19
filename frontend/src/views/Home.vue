@@ -2,9 +2,10 @@
   <div class="home">
     <div class="search_input_wrapper">
       <div class="search_input">
+        <div class="headertext">Search for Shops.</div>
         <v-text-field v-model="searchString" single-line label="Search"></v-text-field>
-        <div v-if="searchString.length > 0" class="info-field"> we found {{ shownShops.length>0? shownShops.length: 'no'}} result{{ shownShops.length ===1 ?'':'s'}}</div>
-        <div v-if="searchString.length === 0" class="info-field"> there {{ shownShops.length > 1? 'are' : 'is'}} {{ shownShops.length>0? shownShops.length: 'no'}} store{{ shownShops.length ===1 ?'':'s'}} available</div>
+        <div v-if="searchString.length > 0" class="info-field"> We found {{ shownShops.length>0? shownShops.length: 'no'}} result{{ shownShops.length ===1 ?'':'s'}}</div>
+        <div v-if="searchString.length === 0" class="info-field"> There {{ shownShops.length > 1? 'are' : 'is'}} {{ shownShops.length>0? shownShops.length: 'no'}} store{{ shownShops.length ===1 ?'':'s'}} available</div>
       </div>
     </div>
     <div id="map" ref="map">
@@ -15,6 +16,7 @@
         :lng="shop.longitude"
         :onClick="onMarkerClick"
         :shop="shop"
+        :color="shop.waitingtime > 5?'red':'green'"
       />
     </div>
   </div>
@@ -36,18 +38,25 @@ export default {
   computed: {
     shownShops: function () {
       return this.shops.filter((shop) => this.searchString === '' ? true : (
-        shop.name.includes(this.searchString) ||
-        shop.category.includes(this.searchString)))
+        shop.name.toLowerCase().includes(this.searchString.toLowerCase()) ||
+        shop.category.toLowerCase().includes(this.searchString.toLowerCase())))
     }
   },
   methods: {
     onMarkerClick (shop) {
+      window.localStorage.setItem('lat', this.map.getCenter().lat)
+      window.localStorage.setItem('lng', this.map.getCenter().lng)
+      window.localStorage.setItem('zoom', this.map.getZoom())
       this.$router.push({ path: `shopDetail/${shop.id}` })
     },
+    /**
+     * Method to enable children (Markers and co) to get access to the map.
+     * @param callback
+     */
     getMap (callback) {
       /* eslint-disable */
-        const that = this
-        /* eslint-enable */
+      const that = this
+      /* eslint-enable */
       function checkForMap () {
         if (that.map) {
           callback(that.map)
@@ -62,9 +71,17 @@ export default {
     }
   },
   async mounted () {
+    const lat = window.localStorage.getItem('lat')
+    const lng = window.localStorage.getItem('lng')
+    const zoom = window.localStorage.getItem('zoom')
+
+    // Map configurations
     this.map = new window.google.maps.Map(this.$refs.map, {
-      center: { lat: 10, lng: 10 },
-      zoom: 8,
+      center: {
+        lat: parseFloat(lat) || 48.137357,
+        lng: parseFloat(lng) || 11.575202
+      },
+      zoom: parseFloat(zoom) || 15,
       streetViewControl: false,
       fullscreenControl: false,
       mapTypeControl: false
@@ -94,5 +111,10 @@ export default {
   #map {
     height: calc(100vh - 50px);
     width: 100vw;
+  }
+  .headertext {
+    font-weight: bold;
+    font-size: 1.5em;
+    color: black;
   }
 </style>

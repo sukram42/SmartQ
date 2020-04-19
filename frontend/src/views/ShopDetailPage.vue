@@ -1,67 +1,93 @@
 <template>
   <div class="infos">
-    <div class="image">
+    <div :class="classesForImage(shop.category)" v-if="shop">
       <v-btn @click="()=>$router.go(-1)" class="ma-2" color="orange darken-2" dark>
         <v-icon dark left>mdi-arrow-left</v-icon>Back
       </v-btn>
     </div>
-    <div class="store-info">
-      <div class="store">{{shop.category}}</div>
+    <div class="store-info" v-if="shop">
+      <div class="category" >{{shop.category}}</div>
       <div class="name">{{ shop.name }}</div>
-      <div class="address">{{ shop.address }}</div>
+      <div class="address" v-on:click="openInMaps()">{{ shop.address }}</div>
     </div>
-    <div class="shareinfos" v-on:click="()=>openInMaps()">
-      <img alt="show on map" src="../assets/iconmonstr-map-8-240.png">
-      <div> Open in Maps </div>
-    </div>
-    <div class="waiting">
+
+    <div class="waiting" v-if="shop">
       <div :class="{'indicator': 1, 'indicator-green': shop.waiting < 7 ? 1:0, 'indicator-red': shop.waiting < 7 ? 0:1}"></div>
       <div class="waiting-text">
-        <div class="waiting-number"> {{shop.waiting}} </div>
+        <div class="waiting-number"> {{shop.waitingtime}} </div>
         <div class="waiting-label"> Waiting</div>
       </div>
     </div>
-    <div class="chart">
+    <div class="cap" v-if="shop">
+     <div class="cap-text">
+        <div class="cap-number"> {{Math.round(shop.capacity*100)}} </div>
+        <div class="cap-label"> % Capacity </div>
+      </div>
+      <div :class="{'indicator': 1, 'indicator-green': shop.capacity < 1 ? 1:0, 'indicator-red': shop.capacity < 1 ? 0:1}"></div>
     </div>
+    <div class="chart" v-if="shop">
+      <trend
+        :data='historyWaiting'
+        :gradient="['#b00000', '#ffd05c', '#00b000']"
+        :max='shop.maxcapacity'
+        :min='shop.maxcapacity'
+        auto-draw
+        smooth
+        strokeWidth="40px"
+        >
+      </trend>
+      <div>
+        Current trend of Waiting People
+      </div>
+    </div>
+<!--    <div class="shareinfos" v-on:click="()=>openInMaps()">-->
+<!--      <img alt="show on map" src="../assets/iconmonstr-map-8-240.png">-->
+<!--      <div> Open in Maps </div>-->
+<!--    </div>-->
   </div>
 </template>
 
 <script>
 import axios from 'axios'
 import { config } from '../config/config.js'
+import trend from 'vuetrend'
 
 export default {
   name: 'ShopDetailPage',
   data: () => ({
-    shop: {
-      id: 1,
-      name: 'Penny Schwabing',
-      category: 'groceries',
-      address: 'Musterweg 15, 80807 München',
-      latitude: 48.2,
-      longitude: 11.5,
-      storespace: 800,
-      maxcapacity: 50,
-      capacity: 92.5,
-      waiting: 6,
-      lastupdate: {}
-    }
+    shop: null,
+    // Historic Data
+    historyWaiting: []
   }),
   methods: {
     openInMaps: function () {
       window.open(`http://www.google.com/maps/place/${this.shop.latitude},${this.shop.longitude}`)
     },
     loadShopInfo: async function () {
-      return axios.get(`${config.baseApi}/shopInfo&id=${this.$route.params.shopID}`)
+      return axios.get(`${config.baseApi}/shopinfo?id=${this.$route.params.shopID}`)
+    },
+    classesForImage: (category) => {
+      const res = { image: 1 }
+      res[`image-${category}`] = 1
+      return res
     }
   },
   async mounted () {
-    this.shop = await this.loadShopInfo()
+    const shopdata = (await this.loadShopInfo()).data
+    this.shop = shopdata[0]
+    this.historyWaiting = shopdata.map((datapoint) => datapoint.waitingtime).reverse()
   }
 }
 </script>
 
 <style scoped>
+  svg{
+    margin: 0px !important;
+    padding: 0px;
+    width: 100%;
+    height: 100%;
+    stroke-width: 1px;
+  }
   img{
     height: 3em;
   }
@@ -81,16 +107,29 @@ export default {
       "img img img img"
       ". name name ."
       ". wait info . "
-      /*". graph graph ."*/
+      ". graph graph ."
   }
   .image {
     grid-area: img;
-    background-image: url('../assets/hanson-lu-sq5P00L7lXc-unsplash.jpg');
+
     background-size: cover;
     background-position: center;
     display: flex;
     align-items: flex-end;
   }
+  .image-groceries {
+     background-image: url('../assets/hanson-lu-sq5P00L7lXc-unsplash.jpg');
+   }
+  .image-pharmacy {
+    background-image: url('../assets/bernd-bangert-ZUbfL_httr4-unsplash.jpg');
+  }
+  .image-restaurant {
+    background-image: url('../assets/patrick-tomasso-GXXYkSwndP4-unsplash.jpg');
+  }
+  .image-hardware-store {
+    background-image: url('../assets/jelleke-vanooteghem-MohB4LCIPyM-unsplash.jpg');
+  }
+
   .store-info {
     grid-area: name;
     display: flex;
@@ -115,7 +154,7 @@ export default {
     margin: 0.5em;
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
   }
   .waiting-text{
@@ -130,16 +169,15 @@ export default {
   }
   .waiting-label {
     font-weight: lighter;
-    font-size: 2em;
+    font-size: 1.4em;
   }
   .chart {
     grid-area: graph;
-  }
-  .address{
-    padding-top: 2%;
+    margin-top: 10%
   }
   .address > * {
-    padding: 0 1%;
+    padding-top: 2%;
+    color: #0000DD;
     word-break: keep-all;
     text-wrap: avoid;
   }
@@ -153,6 +191,28 @@ export default {
   }
   .indicator-red {
     background-color: #B9584A;
+  }
+  .cap {
+    grid-area: info;
+    margin: 0.5em;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+  .cap-text{
+    margin: 0.5em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .cap-number{
+    font-size: 4em;
+  }
+  .cap-label {
+    font-weight: lighter;
+    font-size: 1.4em;
   }
 
   .shareinfos{
