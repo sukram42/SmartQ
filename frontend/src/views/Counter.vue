@@ -8,8 +8,11 @@
       <div class="waiting">
         Waiting
       </div>
-      <div class="cap">
+      <div class="cap" v-if="cap>0">
         {{ cap * 100 }} % of {{ maxCap }}
+      </div>
+      <div class="cap" v-if="cap<=0">
+        No
       </div>
       <div class="lblcap">
         People in the Store
@@ -45,16 +48,14 @@ export default {
       })
     },
     onBtnUpClicked: function () {
-      this.changePeopleCount(1).then(() => this.updateMeasures(false)).catch((e) => {
+      this.changePeopleCount(1).then(() => this.updateMeasures(true)).catch((e) => {
         this.error = e
       })
-      this.count += 1
     },
     onBtnDownClicked: function () {
-      this.changePeopleCount(1).then(() => this.updateMeasures(false)).catch((e) => {
+      this.changePeopleCount(-1).then(() => this.updateMeasures(true)).catch((e) => {
         this.error = e
       })
-      this.count -= this.count > 0 ? 1 : 0
     },
     updateMeasures: async function (countCounting) {
       const answer = await axios.get(`${config.baseApi}/shopinfo?id=${this.$route.params.shopID}&userid=${window.localStorage.getItem('user')}`)

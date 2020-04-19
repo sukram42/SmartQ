@@ -36,8 +36,8 @@ export default {
   computed: {
     shownShops: function () {
       return this.shops.filter((shop) => this.searchString === '' ? true : (
-        shop.name.includes(this.searchString) ||
-        shop.category.includes(this.searchString)))
+        shop.name.toLowerCase().includes(this.searchString.toLowerCase()) ||
+        shop.category.toLowerCase().includes(this.searchString.toLowerCase())))
     }
   },
   methods: {
