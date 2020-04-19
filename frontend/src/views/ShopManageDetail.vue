@@ -44,7 +44,7 @@ export default {
   data: function () {
     return {
       editing: false,
-      categoryItems: ['food', 'groceries', 'restaurant'],
+      categoryItems: ['groceries', 'pharmacy', 'restaurant', 'hardware-store'],
       editIcon: 'mdi-pencil'
     }
   },

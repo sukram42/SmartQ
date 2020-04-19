@@ -1,19 +1,16 @@
 <template>
   <div class="infos">
-    <div class="image">
+    <div :class="classesForImage(shop.category)" v-if="shop">
       <v-btn @click="()=>$router.go(-1)" class="ma-2" color="orange darken-2" dark>
         <v-icon dark left>mdi-arrow-left</v-icon>Back
       </v-btn>
     </div>
     <div class="store-info" v-if="shop">
-      <div class="store" >{{shop.category}}</div>
+      <div class="category" >{{shop.category}}</div>
       <div class="name">{{ shop.name }}</div>
-      <div class="address">{{ shop.address }}</div>
+      <div class="address" v-on:click="openInMaps()">{{ shop.address }}</div>
     </div>
-<!--    <div class="shareinfos" v-on:click="()=>openInMaps()">-->
-<!--      <img alt="show on map" src="../assets/iconmonstr-map-8-240.png">-->
-<!--      <div> Open in Maps </div>-->
-<!--    </div>-->
+
     <div class="waiting" v-if="shop">
       <div :class="{'indicator': 1, 'indicator-green': shop.waiting < 7 ? 1:0, 'indicator-red': shop.waiting < 7 ? 0:1}"></div>
       <div class="waiting-text">
@@ -34,15 +31,19 @@
         :gradient="['#b00000', '#ffd05c', '#00b000']"
         :max='shop.maxcapacity'
         :min='shop.maxcapacity'
-        strokeWidth="40px"
         auto-draw
         smooth
+        strokeWidth="40px"
         >
       </trend>
       <div>
         Current trend of Waiting People
       </div>
     </div>
+<!--    <div class="shareinfos" v-on:click="()=>openInMaps()">-->
+<!--      <img alt="show on map" src="../assets/iconmonstr-map-8-240.png">-->
+<!--      <div> Open in Maps </div>-->
+<!--    </div>-->
   </div>
 </template>
 
@@ -64,6 +65,11 @@ export default {
     },
     loadShopInfo: async function () {
       return axios.get(`${config.baseApi}/shopinfo?id=${this.$route.params.shopID}`)
+    },
+    classesForImage: (category) => {
+      const res = { image: 1 }
+      res[`image-${category}`] = 1
+      return res
     }
   },
   async mounted () {
@@ -105,12 +111,25 @@ export default {
   }
   .image {
     grid-area: img;
-    background-image: url('../assets/hanson-lu-sq5P00L7lXc-unsplash.jpg');
+
     background-size: cover;
     background-position: center;
     display: flex;
     align-items: flex-end;
   }
+  .image-groceries {
+     background-image: url('../assets/hanson-lu-sq5P00L7lXc-unsplash.jpg');
+   }
+  .image-pharmacy {
+    background-image: url('../assets/bernd-bangert-ZUbfL_httr4-unsplash.jpg');
+  }
+  .image-restaurant {
+    background-image: url('../assets/patrick-tomasso-GXXYkSwndP4-unsplash.jpg');
+  }
+  .image-hardware-store {
+    background-image: url('../assets/jelleke-vanooteghem-MohB4LCIPyM-unsplash.jpg');
+  }
+
   .store-info {
     grid-area: name;
     display: flex;
@@ -156,11 +175,9 @@ export default {
     grid-area: graph;
     margin-top: 10%
   }
-  .address{
-    padding-top: 2%;
-  }
   .address > * {
-    padding: 0 1%;
+    padding-top: 2%;
+    color: #0000DD;
     word-break: keep-all;
     text-wrap: avoid;
   }
