@@ -258,7 +258,7 @@ def update():
 
 @app.route('/shopinfo', methods=['GET', 'POST'])
 def shopinfo():
-#     try:
+    try:
         if request.method == "GET":
             id_ = request.args.get('id')
             shopinfo = get_shopinfo(id_)
@@ -270,8 +270,8 @@ def shopinfo():
                 return app.response_class(response=json.dumps(f"{shopinfo['name']}\'s data was added in database"),status=200,mimetype='application/json')
             else:
                 return app.response_class(response=json.dumps("Access denied"),status=401,mimetype='application/json')
-#     except:
-#         return app.response_class(response=json.dumps("Service unavailable"),status=503,mimetype='application/json')
+    except:
+        return app.response_class(response=json.dumps("Service unavailable"),status=503,mimetype='application/json')
 
 @app.route('/shops', methods=['GET', 'POST'])
 def list_all_shops():
