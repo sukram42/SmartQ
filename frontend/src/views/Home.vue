@@ -36,8 +36,8 @@ export default {
   computed: {
     shownShops: function () {
       return this.shops.filter((shop) => this.searchString === '' ? true : (
-        shop.name.includes(this.searchString) ||
-        shop.category.includes(this.searchString)))
+        shop.name.toLowerCase().includes(this.searchString.toLowerCase()) ||
+        shop.category.toLowerCase().includes(this.searchString.toLowerCase())))
     }
   },
   methods: {
@@ -63,7 +63,7 @@ export default {
   },
   async mounted () {
     this.map = new window.google.maps.Map(this.$refs.map, {
-      center: { lat: 10, lng: 10 },
+      center: { lat: 48.1362423, lng: 11.5791216 },
       zoom: 8,
       streetViewControl: false,
       fullscreenControl: false,
