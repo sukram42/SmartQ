@@ -5,6 +5,7 @@ import ShopDetailPage from '../views/ShopDetailPage.vue'
 import Counter from '../views/Counter.vue'
 import newShop from '../views/newShop.vue'
 import Login from '../views/Login.vue'
+import addUser from '../views/addUser.vue'
 
 Vue.use(VueRouter)
 
@@ -28,6 +29,11 @@ const routes: Array<RouteConfig> = [
     path: '/newShop',
     name: 'newShop',
     component: newShop
+  },
+  {
+    path: '/addUser',
+    name: 'addUser',
+    component: addUser
   },
   {
     path: '/login',

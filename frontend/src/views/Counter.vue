@@ -24,21 +24,30 @@
     <div class="btn-up">
       <button v-on:click="()=>onBtnUpClicked()">+</button>
     </div>
+    <div class="qrCode">
+      <h3>Scan this if you want to join the Queue of this Store:</h3> <br/>
+      <qrcodevue :value="qradd" size="400"></qrcodevue>
+    </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
 import { config } from '../config/config.js'
+import Qrcodevue from 'qrcode.vue'
 
 export default {
   name: 'Counter',
   data: () => ({
+    qradd: 'http://dies-das-ananas.net/addUser?id=3&userid=3',
     count: 0,
     error: null,
     cap: 0.32,
     maxCap: 200
   }),
+  components: {
+    Qrcodevue
+  },
   methods: {
     changePeopleCount: function (change) {
       return axios.post(`${config.baseApi}/update`, {
@@ -71,6 +80,8 @@ export default {
   },
   async mounted () {
     this.updateMeasures(true)
+    const link = 'http://dies-das-ananas.net/addUser?id=' + this.$route.params.shopID + '&userid=' + window.localStorage.getItem('user')
+    this.qradd = link
   }
 }
 </script>
@@ -79,14 +90,20 @@ export default {
   .counter-group{
     display: grid;
     grid-template-columns: 10% 1fr 1fr 10%;
-    grid-template-rows: 20% 60% 1fr 10%;
+    grid-template-rows: 5% 45% 1fr 50%;
     grid-template-areas:
       " . error error ."
       " . counter2 counter2 ."
       " . counter1 counter3 ."
-  ". . . .";
+       ". qr qr .";
     height: calc(100vh - 50px )
   }
+
+  .qrCode{
+    grid-area: qr;
+    padding-top: 40px;
+  }
+
   .btn-up {
     grid-area: counter1;
   }
