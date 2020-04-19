@@ -1,3 +1,3 @@
 export const config = {
-  baseApi: 'http://88.214.57.7:5000'
+  baseApi: 'http://45.146.253.219:5000'
 }
