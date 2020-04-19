@@ -31,7 +31,7 @@ const routes: Array<RouteConfig> = [
     component: newShop
   },
   {
-    path: '/addUser',
+    path: '/addUser/:shopID/:userID',
     name: 'addUser',
     component: addUser
   },

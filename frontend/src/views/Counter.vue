@@ -80,8 +80,7 @@ export default {
   },
   async mounted () {
     this.updateMeasures(true)
-    const link = 'http://dies-das-ananas.net/addUser?id=' + this.$route.params.shopID + '&userid=' + window.localStorage.getItem('user')
-    this.qradd = link
+    this.qradd = 'http://dies-das-ananas.net/addUser?id=' + this.$route.params.shopID + '&userid=' + window.localStorage.getItem('user')
   }
 }
 </script>
