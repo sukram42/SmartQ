@@ -83,18 +83,13 @@ export default {
   .counter-group{
     display: grid;
     grid-template-columns: 10% 1fr 1fr 10%;
-    grid-template-rows: 5% 45% 1fr 50%;
+    grid-template-rows: 5% 60% 1fr 50%;
     grid-template-areas:
       " . error error ."
       " . counter2 counter2 ."
       " . counter1 counter3 ."
-       ". qr qr .";
+       ". . . .";
     height: calc(100vh - 50px )
-  }
-
-  .qrCode{
-    grid-area: qr;
-    padding-top: 40px;
   }
 
   .btn-up {
