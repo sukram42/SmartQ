@@ -13,7 +13,7 @@
     "axios": "^1.13.5",
     "chart.js": "^4.4.4",
     "glob-parent": "^6.0.2",
-    "minimatch": "^10.0.1",
+    "minimatch": "^10.2.1",
     "path-parse": "^1.0.7",
     "postcss": "^8.4.41",
     "qrcode.vue": "^3.4.1",
