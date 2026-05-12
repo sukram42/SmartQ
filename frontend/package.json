@@ -15,7 +15,7 @@
     "glob-parent": "^6.0.2",
     "minimatch": "^10.2.1",
     "path-parse": "^1.0.7",
-    "postcss": "^8.4.41",
+    "postcss": "^8.5.10",
     "qrcode.vue": "^3.4.1",
     "register-service-worker": "^1.7.2",
     "roboto-fontface": "*",
